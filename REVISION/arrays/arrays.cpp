@@ -112,3 +112,53 @@ int getLongestSubarray(vector<int>& a, int k) {
 
     return maxLen;
 }
+
+
+
+// LC 128 - longest consecutive sequence
+
+// method 1 - TC - O(NlogN)
+int longestConsecutive(vector<int>& nums) {
+    if(nums.empty())return 0;
+
+    sort(nums.begin(), nums.end());
+    int maxi  = 1 ;
+    int temp = 1;
+    for(int i = 1 ; i<nums.size(); i++){
+        if(nums[i]==nums[i-1]) continue;
+
+        else if(nums[i]==nums[i-1]+1){
+            temp++;
+        }
+        else{
+            maxi = max(temp , maxi);
+            temp = 1;
+        }
+    }
+    maxi = max(temp,maxi);
+    return maxi;
+}
+
+
+// method 2 - optimal
+int longestConsecutive(vector<int>& nums) {
+    unordered_set<int> numSet(nums.begin(), nums.end());
+    int maxStreak = 0;
+    
+    for(int num : numSet) {
+        // Only check sequences from their starting number
+        if(!numSet.count(num-1)) {
+            int currentNum = num;
+            int currentStreak = 1;
+            
+            // Count consecutive numbers
+            while(numSet.count(currentNum + 1)) {
+                currentNum++;
+                currentStreak++;
+            }
+            
+            maxStreak = max(maxStreak, currentStreak);
+        }
+    }
+    return maxStreak;
+}
