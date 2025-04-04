@@ -62,3 +62,18 @@ int majorityElement(vector<int>& nums) {
     
     return candidate;
 }
+
+
+// LC 53 - Maximum subarray 
+// kadane's algo 
+
+int maxSubArray(vector<int>& nums) {
+    int sum = 0;
+    int maxSum = INT_MIN;
+    for(int i = 0; i<nums.size(); i++){
+        maxSum = max(sum , maxSum);
+        if(sum<0) sum = nums[i];
+        else sum+=nums[i];
+    }
+    return max(sum , maxSum);
+}
