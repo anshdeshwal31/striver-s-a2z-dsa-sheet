@@ -57,3 +57,44 @@ int ceil(int x, vector<int> &arr){
     }
     return result;
 }
+
+
+
+// LC 34 -Find First and Last Position of Element in Sorted Array
+int firstOccurence(vector<int> &v, int n, int target) {
+    int left = 0, right = n - 1;
+    int result = -1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (v[mid] == target) {
+            result = mid;
+            right = mid - 1;
+        }
+        else if (v[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return result;
+}
+
+int lastOccurence(vector<int> &v, int n, int target) {
+    int left = 0, right = n - 1;
+    int result = -1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (v[mid] == target) {
+            result = mid;
+            left = mid + 1;
+        }
+        else if (v[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return result;
+}
+
+vector<int> searchRange(vector<int>& nums, int target) {
+    int first = firstOccurence(nums, nums.size(), target);
+    int last = lastOccurence(nums, nums.size(), target);
+    return {first, last};   
+}
