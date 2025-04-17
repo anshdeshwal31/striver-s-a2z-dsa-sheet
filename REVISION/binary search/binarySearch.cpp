@@ -170,3 +170,31 @@ bool search(vector<int>& nums, int target) {
     
     return false;
 }
+
+
+
+// LC 1539. Kth Missing Positive Number
+int findKthPositive(vector<int>& arr, int k) {
+    int left = 0;
+    int right = arr.size() - 1;
+    
+    // Special case: if k is smaller than first element
+    if (k < arr[0]) return k;
+    
+    // Binary search
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        
+        // Calculate missing numbers before arr[mid]
+        int missing = arr[mid] - (mid + 1);
+        
+        if (missing < k) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    
+
+    return k + right + 1;
+}
