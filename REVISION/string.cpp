@@ -1,6 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+
+// LC 796 - rotate string 
+
+// brute force
 bool rotateString(string s, string goal) {
     if (s.size() != goal.size()) return false;
     if (s.empty() && goal.empty()) return true;
@@ -13,4 +17,10 @@ bool rotateString(string s, string goal) {
         if (temp == goal) return true;
     }
     return false;
+}
+
+
+// optimal
+bool rotateString(string s, string goal) {
+    return s.size() == goal.size() && (s + s).find(goal);
 }
