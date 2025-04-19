@@ -91,3 +91,25 @@ vector<string> generateParenthesis(int n) {
     backtrack(0, 0, n, "", result);
     return result;
 }
+
+
+// LC 39 - combination sum 
+void solve(int i , vector<int>&candidates , int target , vector<int>temp, vector<vector<int>>& ans){
+    if(target<0)return;
+    if(target==0){
+        ans.push_back(temp);
+        return;
+    }
+    if(i==candidates.size()) return;
+
+    solve(i+1 , candidates, target , temp , ans);
+    temp.push_back(candidates[i]);
+    solve(i,candidates , target-candidates[i] , temp , ans);
+}
+
+vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+    vector<vector<int>> ans;
+    vector<int> temp;
+    solve(0 , candidates , target , temp , ans);
+    return ans;
+}
