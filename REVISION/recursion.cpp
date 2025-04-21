@@ -139,3 +139,28 @@ vector<vector<int>> combinationSum3(int k, int n) {
     solve(1 , k , n , ans , temp);
     return ans;
 }
+
+
+// LC - 90 - subsets 2
+
+void solve(vector<int>&nums, vector<int> & temp , vector<vector<int>>&ans, int index){
+    ans.push_back(temp);
+    for(int i = index ; i<nums.size();i++){
+        if(i>index && nums[i]==nums[i-1]) continue;
+
+        temp.push_back(nums[i]);
+        solve(nums,temp , ans , i+1);
+        temp.pop_back();
+    }
+    
+}
+
+vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+    sort(nums.begin(),nums.end());
+    vector<int> temp;
+    vector<vector<int>> ans;
+    int index = 0;
+    solve(nums,temp,ans,index);
+    return ans;
+ 
+}
