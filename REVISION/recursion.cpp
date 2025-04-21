@@ -113,3 +113,29 @@ vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
     solve(0 , candidates , target , temp , ans);
     return ans;
 }
+
+
+
+// LC 216 - combination sum 3
+void solve(int i , int k , int n  , vector<vector<int>>& ans , vector<int> temp){
+    if(k==0){
+        if(n==0){
+            ans.push_back(temp);
+            return;
+        }
+        return;
+    }
+
+    for(int j = i ; j <= 9 ; j ++){
+        temp.push_back(j);
+        solve(j+1 , k-1 , n-j , ans , temp);
+        temp.pop_back();
+    }
+}
+
+vector<vector<int>> combinationSum3(int k, int n) {
+    vector<vector<int>> ans;
+    vector<int> temp;
+    solve(1 , k , n , ans , temp);
+    return ans;
+}
