@@ -164,3 +164,35 @@ vector<vector<int>> subsetsWithDup(vector<int>& nums) {
     return ans;
  
 }
+
+
+
+// LC - 17. Letter Combinations of a Phone Number
+void solve(int i , string digits , string temp , vector<string>& ans, unordered_map<int , string >& mp){
+    if(i == digits.size()){
+        ans.push_back(temp);
+        return;
+    }
+
+    for(auto j:mp[digits[i]-'0']){
+        solve(i+1, digits , temp+j, ans ,mp);
+    }
+
+}
+vector<string> letterCombinations(string digits) {
+    if(digits=="")return {};
+    unordered_map <int , string> mp = {
+        {2,"abc"},
+        {3,"def"},
+        {4,"ghi"},
+        {5,"jkl"},
+        {6,"mno"},
+        {7,"pqrs"},
+        {8,"tuv"},
+        {9,"wxyz"}
+    };
+    vector<string> ans;
+    string temp = "";
+    solve(0 , digits , temp , ans , mp);
+    return ans;
+}
