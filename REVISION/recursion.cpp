@@ -196,3 +196,53 @@ vector<string> letterCombinations(string digits) {
     solve(0 , digits , temp , ans , mp);
     return ans;
 }
+
+
+
+// 51. N-Queens
+bool isSafe(vector<string>& board , int row , int col, int n){
+    // row check
+    for(int c = col;c>=0;c--){
+        if(board[row][c]=='Q') return false;
+    }
+
+    // col check
+    for(int r = 0 ; r<n; r++){
+        if(board[r][col]=='Q') return false;
+    }
+
+    // upper left diagonal check
+    for(int r = row , c = col ; r>=0 && c>=0 ; r-- , c--){
+        if(board[r][c]=='Q')return false;
+    }
+    
+    // lower left diagonal check
+    for(int r = row , c = col ; r<n && c>=0 ; r++ , c--){
+        if(board[r][c]=='Q')return false;
+    }
+
+    return true;
+}
+
+
+void solve2(vector<string>& board ,  int i , int n , vector<vector<string>>& results){
+    if(i==n){
+        results.push_back(board);
+        return;
+    }
+
+    for(int j=0;j<n;j++){
+        if(isSafe(board, j , i , n)){
+            board[j][i] = 'Q';
+            solve2(board , i+1 , n , results);
+            board[j][i] = '.';
+        }
+    }
+}
+vector<vector<string>> solveNQueens(int n) {
+    // Initialize empty board
+    vector<string> board(n, string(n, '.'));
+    vector<vector<string>> results;
+    solve2(board, 0, n, results);
+    return results;
+}
