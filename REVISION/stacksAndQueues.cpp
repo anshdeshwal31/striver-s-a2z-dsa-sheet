@@ -243,5 +243,37 @@ class MinStack {
         int getMin() {
             return minSt.top();
         }
-    };
+};
+
     
+
+// LC 496 - next greater element
+vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+
+    stack<int> st;
+    int n = nums2.size();
+    unordered_map<int , int > mp;
+    st.push(nums2[n-1]);
+    mp[nums2[n-1]] =  -1;
+
+    for(int i = n-2;i>=0;i--){
+        int element = nums2[i];
+        while(!st.empty() && st.top()<=element){
+            st.pop();
+        } 
+
+        if(!st.empty()){
+            mp[element] = st.top();
+        }
+        else{
+            mp[element] = -1;
+        }
+        st.push(element);
+    }
+
+    vector<int>ans;
+    for(int el:nums1){
+        ans.push_back(mp[el]);
+    }
+    return ans;
+}
