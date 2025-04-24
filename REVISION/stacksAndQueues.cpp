@@ -247,7 +247,7 @@ class MinStack {
 
     
 
-// LC 496 - next greater element
+// LC 496 - next greater element 1
 vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
 
     stack<int> st;
@@ -276,4 +276,25 @@ vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
         ans.push_back(mp[el]);
     }
     return ans;
+}
+
+
+
+// LC 503 - next greater element 2 
+vector<int> nextGreaterElements(vector<int>& nums) {
+    stack<int>s;
+    int n=nums.size();
+    vector<int>v(n);
+    for(int i=n-2;i>=0;i--){
+        s.push(nums[i]);
+    }
+    for(int i=n-1;i>=0;i--){
+        while(!s.empty() && s.top()<=nums[i]){
+            s.pop();
+        }
+        if(!s.empty())v[i]=s.top();
+        else v[i]=-1;
+        s.push(nums[i]);
+    }
+    return v;
 }
