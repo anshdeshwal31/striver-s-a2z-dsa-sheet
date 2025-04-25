@@ -105,16 +105,55 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
 }
 
 
-TreeNode* solve(int index , vector<int>& preorder){
-    if(index>=preorder.size()) return nullptr;
-
-    TreeNode* root = new TreeNode(preorder[index]);
-    root->left = solve(index+1 , preorder);
-    root->right = solve(index+2 , preorder);
+// LC - 1008. Construct Binary Search Tree from Preorder Traversal
+//METHOD 1
+TreeNode* buildBST(vector<int>& preorder, int& index, int min, int max) {
+    if (index >= preorder.size() || preorder[index] < min || preorder[index] > max) {
+        return nullptr;
+    }
+    
+    TreeNode* root = new TreeNode(preorder[index++]);
+    
+    root->left = buildBST(preorder, index, min, root->val);
+    root->right = buildBST(preorder, index, root->val, max);
+    
     return root;
 }
 
 TreeNode* bstFromPreorder(vector<int>& preorder) {
     int index = 0;
-    return solve(index , preorder);
+    return buildBST(preorder, index, INT_MIN, INT_MAX);
 }
+
+
+// METHOD 2
+TreeNode* build(vector<int>& preorder, vector<int>& inorder, int preStart, int preEnd, int inStart, int inEnd) {
+    if (preStart > preEnd || inStart > inEnd) return nullptr;
+
+    // The first element in preorder is the root.
+    int rootVal = preorder[preStart];
+    TreeNode* root = new TreeNode(rootVal);
+
+    // Find the index of root in inorder to split left/right subtrees.
+    int inIndex = inStart; // Start searching from inStart.
+    while (inorder[inIndex] != rootVal) {
+        inIndex++;
+    }
+
+    // Calculate the size of the left subtree.
+    int leftSize = inIndex - inStart;
+
+    // Recursively build left and right subtrees.
+    root->left = build(preorder, inorder, preStart + 1, preStart + leftSize, inStart, inIndex - 1);
+
+    root->right = build(preorder, inorder, preStart + leftSize + 1, preEnd, inIndex + 1, inEnd);
+
+    return root;
+}
+
+TreeNode* bstFromPreorder(vector<int>& preorder) {
+    vector<int> inorder = preorder;
+    sort(inorder.begin() , inorder.end());
+    return build(preorder, inorder, 0, preorder.size() - 1, 0, inorder.size() - 1);
+}
+    
