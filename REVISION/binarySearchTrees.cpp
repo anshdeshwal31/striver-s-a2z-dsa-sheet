@@ -103,3 +103,18 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
     // Current node is the LCA
     return root;
 }
+
+
+TreeNode* solve(int index , vector<int>& preorder){
+    if(index>=preorder.size()) return nullptr;
+
+    TreeNode* root = new TreeNode(preorder[index]);
+    root->left = solve(index+1 , preorder);
+    root->right = solve(index+2 , preorder);
+    return root;
+}
+
+TreeNode* bstFromPreorder(vector<int>& preorder) {
+    int index = 0;
+    return solve(index , preorder);
+}
