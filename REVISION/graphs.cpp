@@ -32,7 +32,8 @@ int solve(vector<vector<int>>& grid) {
         bool hasNewRotten = false;
 
         for (int i = 0; i < qSize; i++) {
-            auto [x, y] = q.front();
+            int x = q.front().first;
+            int y = q.front().second;
             q.pop();
 
             for (auto& d : directions) {
@@ -58,3 +59,110 @@ int solve(vector<vector<int>>& grid) {
 int orangesRotting(vector<vector<int>>& grid) {
     return solve(grid);
 }
+
+
+// LC 542 - 01 matrix
+    // // brute force  
+    // int solve(int row, int col, vector<vector<int>>& mat) {
+    //     // using bfs traversal
+    //     vector<vector<int>> dir = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // up, right, down, left
+    //     queue<pair<int, int>> q;
+    //     q.push({row, col});
+
+    //     // Change: Added a visited matrix to avoid revisiting
+    //     vector<vector<bool>> visited(mat.size(), vector<bool>(mat[0].size(), false));
+    //     visited[row][col] = true;
+
+    //     int k = 0;
+    //     while (!q.empty()) {
+    //         int size = q.size();
+
+    //         for (int i = 0; i < size; i++) {
+    //             auto top = q.front();
+    //             q.pop();
+    //             int x = top.first;
+    //             int y = top.second;
+
+    //             // Check if current cell is 0
+    //             if (mat[x][y] == 0) {
+    //                 return k;  // return distance if zero is found
+    //             }
+
+    //             // Traverse in four directions
+    //             for (auto d : dir) {
+    //                 int newX = x + d[0];
+    //                 int newY = y + d[1];
+                    
+    //                 // Change: Added condition to avoid revisiting cells
+    //                 if (newX >= 0 && newX < mat.size() && newY >= 0 && newY < mat[0].size() && !visited[newX][newY]) {
+    //                     q.push({newX, newY});
+    //                     visited[newX][newY] = true;
+    //                 }
+    //             }
+    //         }
+    //         k++;  // Increase distance after checking one level of BFS
+    //     }
+
+    //     return -1;
+    // }
+
+    // vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+    //     int n = mat.size();
+    //     int m = mat[0].size();
+    //     vector<vector<int>> res(n, vector<int>(m, 0));
+
+    //     for (int i = 0; i < n; i++) {
+    //         for (int j = 0; j < m; j++) {
+    //             if (mat[i][j] != 0) {
+    //                 // Change: Initialize distance as large value instead of 0
+    //                 res[i][j] = solve(i, j, mat);
+    //             }
+    //         }
+    //     }
+
+    //     return res;
+    // }
+
+
+    // optimised solution 
+
+    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+        int m = mat.size(), n = mat[0].size();
+        vector<vector<int>> result(m, vector<int>(n, INT_MAX)); // Initialize result matrix
+        queue<pair<int, int>> q;  // Queue to store coordinates for BFS
+        
+        // Initialize queue with all 0's and set their distance to 0
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (mat[i][j] == 0) {
+                    result[i][j] = 0;
+                    q.push({i, j});  // Add all '0' positions to the queue
+                }
+            }
+        }
+    
+        // Direction vectors for moving up, down, left, and right
+        vector<pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        
+        // Perform BFS
+        while (!q.empty()) {
+            int x = q.front().first;
+            int y = q.front().second;
+            q.pop();
+    
+            for (auto dir : directions) {
+                int newX = x + dir.first;
+                int newY = y + dir.second;
+                
+                // If the new position is within bounds and we found a shorter distance
+                if (newX >= 0 && newX < m && newY >= 0 && newY < n) {
+                    if (result[newX][newY] > result[x][y] + 1) {
+                        result[newX][newY] = result[x][y] + 1;  // Update distance
+                        q.push({newX, newY});  // Add the new position to the queue
+                    }
+                }
+            }
+        }
+    
+        return result;
+    }
