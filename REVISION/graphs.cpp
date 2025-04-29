@@ -203,3 +203,43 @@ int orangesRotting(vector<vector<int>>& grid) {
 
         return uniqueIslands.size();
     }
+
+
+    
+    // LC 802. Find Eventual Safe States
+    
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        int n = graph.size();
+        vector<vector<int>> revGraph(n);
+        vector<int> indegree(n, 0);
+
+        // Step 1: Build reverse graph and count indegrees
+        for (int u = 0; u < n; ++u) {
+            for (int v : graph[u]) {
+                revGraph[v].push_back(u); 
+                indegree[u]++;            // original outdegree becomes indegree
+            }
+        }
+
+        // Step 2: Queue all nodes with 0 indegree (terminal nodes)
+        queue<int> q;
+        for (int i = 0; i < n; ++i) {
+            if (indegree[i] == 0) q.push(i);
+        }
+
+        vector<int> safe;
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            safe.push_back(node);
+            for (int neighbor : revGraph[node]) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) {
+                    q.push(neighbor);
+                }
+            }
+        }
+
+        sort(safe.begin(), safe.end());
+        return safe;
+    }
