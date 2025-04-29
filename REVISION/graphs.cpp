@@ -207,7 +207,7 @@ int orangesRotting(vector<vector<int>>& grid) {
 
     
     // LC 802. Find Eventual Safe States
-    
+
     vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
         int n = graph.size();
         vector<vector<int>> revGraph(n);
@@ -242,4 +242,35 @@ int orangesRotting(vector<vector<int>>& grid) {
 
         sort(safe.begin(), safe.end());
         return safe;
+    }
+
+
+
+    // LC 785. Is Graph Bipartite?
+    bool isBipartite(vector<vector<int>>& graph) {
+        int n = graph.size();
+        vector<int> color(n, -1);  // -1 means uncolored
+
+        for (int i = 0; i < n; ++i) {
+            if (color[i] == -1) {  // Start BFS for each unvisited component
+                queue<int> q;
+                q.push(i);
+                color[i] = 0;  // Start coloring with 0
+
+                while (!q.empty()) {
+                    int node = q.front();
+                    q.pop();
+
+                    for (int neighbor : graph[node]) {
+                        if (color[neighbor] == -1) {
+                            color[neighbor] = 1 - color[node]; // Alternate color
+                            q.push(neighbor);
+                        } else if (color[neighbor] == color[node]) {
+                            return false; // Same color on both ends of edge
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
