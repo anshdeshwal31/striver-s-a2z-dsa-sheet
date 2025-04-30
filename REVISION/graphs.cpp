@@ -353,3 +353,39 @@ int orangesRotting(vector<vector<int>>& grid) {
 
         return 0;
     }
+
+
+
+    // LC 787. Cheapest Flights Within K Stops
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+        vector<pair<int, int>> adj[n]; // {to, cost}
+        for (auto& f : flights) {
+            adj[f[0]].push_back({f[1], f[2]});
+        }
+    
+        // {cost, stops, node}
+        set<tuple<int, int, int>> st;
+        st.insert({0, 0, src});
+    
+        // min cost to reach [node][stops]
+        vector<vector<int>> dist(n, vector<int>(k + 2, INT_MAX));
+        dist[src][0] = 0;
+    
+        while (!st.empty()) {
+            auto [cost, stops, node] = *st.begin();
+            st.erase(st.begin());
+    
+            if (node == dst) return cost;
+            if (stops > k) continue;
+    
+            for (auto [nei, price] : adj[node]) {
+                int newCost = cost + price;
+                if (newCost < dist[nei][stops + 1]) {
+                    dist[nei][stops + 1] = newCost;
+                    st.insert({newCost, stops + 1, nei});
+                }
+            }
+        }
+    
+        return -1;
+    }
