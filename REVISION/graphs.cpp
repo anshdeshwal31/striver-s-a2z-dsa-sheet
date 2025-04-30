@@ -313,3 +313,43 @@ int orangesRotting(vector<vector<int>>& grid) {
         sort(safe.begin(), safe.end());
         return safe;
     }
+
+
+
+    // LC 1631. Path With Minimum Effort
+    int minimumEffortPath(vector<vector<int>>& heights) {
+        int m = heights.size(), n = heights[0].size();
+        vector<vector<int>> dist(m, vector<int>(n, INT_MAX));
+        dist[0][0] = 0;
+
+        set<tuple<int, int, int>> st;
+        st.insert({0, 0, 0}); // {effort, row, col}
+
+        vector<pair<int, int>> directions = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
+
+        while (!st.empty()) {
+            auto [effort, x, y] = *st.begin();
+            st.erase(st.begin());
+
+            if (x == m - 1 && y == n - 1) return effort;
+
+            for (auto [dx, dy] : directions) {
+                int nx = x + dx, ny = y + dy;
+                if (nx >= 0 && ny >= 0 && nx < m && ny < n) {
+                    int diff = abs(heights[x][y] - heights[nx][ny]);
+                    int maxEffort = max(effort, diff);
+
+                    if (maxEffort < dist[nx][ny]) {
+                        // Remove old entry if present
+                        if (dist[nx][ny] != INT_MAX) {
+                            st.erase({dist[nx][ny], nx, ny});
+                        }
+                        dist[nx][ny] = maxEffort;
+                        st.insert({maxEffort, nx, ny});
+                    }
+                }
+            }
+        }
+
+        return 0;
+    }
