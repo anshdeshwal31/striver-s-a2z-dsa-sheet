@@ -422,6 +422,7 @@ int orangesRotting(vector<vector<int>>& grid) {
     }
 
 
+
     
     // LC 126 - word ladder 2
     vector<vector<string>> findSequences(string beginWord, string endWord, vector<string> &wordList){
@@ -472,4 +473,77 @@ int orangesRotting(vector<vector<int>>& grid) {
             }
         }
         return ans;
+    }
+
+
+
+
+    // LC 1976 - Number of Ways to Arrive at Destination
+    
+    int MOD = 1e9 + 7;
+
+    int countPaths(int n, vector<vector<int>>& roads) {
+        // Adjacency list representation of the graphLC 1976 - Number of Ways to Arrive at Destination
+        vector<vector<pair<int, int>>> graph(n);
+        for (const auto& road : roads) {
+            int u = road[0], v = road[1], time = road[2];
+            graph[u].push_back({v, time});
+            graph[v].push_back({u, time});
+        }
+
+        // Distances to each node, initialized to a large value
+        vector<long long> dist(n, LLONG_MAX);
+        // Ways to reach each node with the shortest path
+        vector<int> ways(n, 0);
+        
+        // Min-heap for Dijkstra's algorithm
+        priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<>> pq;
+        dist[0] = 0;
+        ways[0] = 1;
+        pq.push({0, 0});  // (distance, node)
+
+        while (!pq.empty()) {
+            auto [d, u] = pq.top();
+            pq.pop();
+
+            if (d > dist[u]) continue;
+
+            for (const auto& [v, time] : graph[u]) {
+                long long newDist = d + time;
+                
+                if (newDist < dist[v]) {
+                    dist[v] = newDist;
+                    ways[v] = ways[u];
+                    pq.push({newDist, v});
+                } else if (newDist == dist[v]) {
+                    ways[v] = (ways[v] + ways[u]) % MOD;
+                }
+            }
+        }
+
+        return dist[n - 1] == LLONG_MAX ? -1 : ways[n - 1];
+    }
+
+
+
+    // Minimum Multiplications to reach End - https://www.geeksforgeeks.org/problems/minimum-multiplications-to-reach-end/1
+    int minimumMultiplications(vector<int>& arr, int start, int end) {
+        queue<pair<int,int>> q ;// number , level
+        unordered_set<int> visited;
+        q.push({start , 0});
+
+        while(!q.empty()){
+            auto p = q.front();
+            q.pop();
+
+            if(p.first == end ) return p.second;
+
+            for(int i = 0 ; i<arr.size(); i++){
+                int temp = (p.first*arr[i])%100000;
+                if(visited.find(temp)!= visited.end()) continue;
+                q.push({(p.first*arr[i])%100000,p.second+1});
+                visited.insert(temp);
+            }
+        }
+        return -1;
     }
