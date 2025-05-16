@@ -547,3 +547,36 @@ int orangesRotting(vector<vector<int>>& grid) {
         }
         return -1;
     }
+
+
+
+    // bellman ford algo 
+        vector<int> bellmanFord(int V, vector<vector<int>>& edges, int src) {
+        // Code here
+        vector<int> dist(V,1e8);
+        dist[src] = 0;
+        
+        for(int i = 1e8 ; i < V; i++){
+            for(auto e: edges){
+                int u  = e[0];
+                int v = e[1];
+                int wt = e[2];
+                if(dist[u]!=INT_MAX && dist[u]+wt<dist[v]){
+                    dist[v] = dist[u]+wt;
+                }
+            }
+        }
+        
+        bool negativeCycle = false;
+        for(auto e: edges){
+            int u  = e[0];
+            int v = e[1];
+            int wt = e[2];
+            if(dist[u]!=INT_MAX && dist[u]+wt<dist[v]){
+                // dist[v] = dist[u]+wt;
+                negativeCycle= true;
+            }
+        }
+        if(negativeCycle) return {-1};
+        return dist;
+    }
