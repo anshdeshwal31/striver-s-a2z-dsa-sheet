@@ -815,3 +815,52 @@ int minimumMultiplications(vector<int>& arr, int start, int end) {
     }
     return -1;
 }       
+
+
+
+
+// kruskal's algo - https://www.geeksforgeeks.org/problems/minimum-spanning-tree-kruskals-algorithm/1
+int findParent(vector<int>& parent , int v){
+    if(parent[v] == v) return v;
+    return parent[v] = findParent(parent , parent[v]);
+}
+void unionSet(vector<int>&parent , vector<int>& rank ,int a , int b ){
+    int parentA = findParent(parent , a); 
+    int parentB = findParent(parent , b); 
+
+    if(rank[parentA]>rank[parentB]) parent[parentB] = parentA;
+    else if(rank[parentB] > rank[parentA]) parent[parentA] = parentB;
+    else{
+        parent[parentB] = parentA;
+        rank[parentA]++;
+    } 
+}
+
+bool compare(vector<int>& a, vector<int>& b){
+    return a[2]<b[2];
+}
+
+int kruskalsMST(int V, vector<vector<int>> &edges) {
+    vector<int> rank(V,0);
+    vector<int> parent(V);
+    for(int i = 0 ; i < V ; i++){
+        parent[i] = i;
+    }
+
+    sort(edges.begin(), edges.end(), compare);
+
+    int ans = 0;
+    for(auto e:edges){
+        int u = e[0];
+        int v = e[1];
+        int wt = e[2];
+        int parentU = findParent(parent , u );
+        int parentV = findParent(parent , v );
+        if(parentU != parentV){
+            unionSet(parent , rank , u , v);
+            ans+=wt;
+        }
+    }
+    return ans;
+
+}
