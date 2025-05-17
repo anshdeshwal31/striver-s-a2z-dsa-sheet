@@ -639,3 +639,37 @@ int orangesRotting(vector<vector<int>>& grid) {
         }
         return p.second;
     }
+
+
+
+    // Minimum Spanning Tree - https://www.geeksforgeeks.org/problems/minimum-spanning-tree/1
+    int spanningTree(int V, vector<vector<int>> adj[]) {
+        vector<int> key (V,INT_MAX);
+        vector<bool>mst (V,false);
+
+        for(int i = 0 ; i < V ; i++){
+            int mini = INT_MAX;
+            int k = -1;
+
+            for(int j  =  0 ; j < V ; j++){
+                if(!mst[j]){
+                    if(key[j]<mini){
+                        k = j;
+                    }
+                }
+            }
+
+            mst[k] = true;
+
+            for(auto neigh:adj[k]){
+                int neighbour = neigh[0];
+                int wt = neigh[1];
+                if(!mst[neighbour]){
+                    key[neighbour] = min(key[neighbour],key[k]+wt);
+                }
+
+            }
+        }
+        return accumulate(key.begin(), key.end(),0);
+
+    }
