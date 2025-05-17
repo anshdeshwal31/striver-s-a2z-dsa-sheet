@@ -862,5 +862,74 @@ int kruskalsMST(int V, vector<vector<int>> &edges) {
         }
     }
     return ans;
+}
 
+
+void dfs(vector<vector<int>> adjList , int node , int parent , int & backEdge, vector<int>& visited){
+    visited[node] = 1;
+    for(auto neigb:adjList[node]){
+        if(!visited[neigb]){
+            dfs(adjList,neigb , node , backEdge , visited);
+        }
+        else{
+            if(neigb == parent)continue;
+            else backEdge++;
+        }
+    }
+}
+
+
+int makeConnected(int n, vector<vector<int>>& connections) {
+    vector<vector<int>> adjList(n);
+    for(auto e: connections){
+        int u = e[0];
+        int v = e[1];
+        adjList[u].push_back(v);
+        adjList[v].push_back(u);
+    }
+    vector<int> visited(n,0);
+    int connectedComponents = 0;
+    int backEdge = 0;
+    for(int i = 0 ; i<n ; i++){
+        if(!visited[i]){
+            dfs(adjList , i , i , backEdge , visited);
+            connectedComponents++;
+        }
+    }
+
+    if(connectedComponents>backEdge) return -1;
+    else return connectedComponents;
+}
+
+
+
+// LC - 1319. Number of Operations to Make Network Connected
+void dfs(vector<vector<int>>& adjList, int node, vector<int>& visited) {
+    visited[node] = 1;
+    for (auto neigh : adjList[node]) {
+        if (!visited[neigh])
+            dfs(adjList, neigh, visited);
+    }
+}
+
+int makeConnected(int n, vector<vector<int>>& connections) {
+    if (connections.size() < n - 1) return -1;  // Not enough cables
+
+    vector<vector<int>> adjList(n);
+    for (auto& e : connections) {
+        adjList[e[0]].push_back(e[1]);
+        adjList[e[1]].push_back(e[0]);
+    }
+
+    vector<int> visited(n, 0);
+    int connectedComponents = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (!visited[i]) {
+            dfs(adjList, i, visited);
+            connectedComponents++;
+        }
+    }
+
+    return connectedComponents - 1;
 }
