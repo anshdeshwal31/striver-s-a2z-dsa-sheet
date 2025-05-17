@@ -581,7 +581,7 @@ int orangesRotting(vector<vector<int>>& grid) {
         return dist;
     }
 
-    
+
 
 
     // floyd warshall algo 
@@ -604,4 +604,38 @@ int orangesRotting(vector<vector<int>>& grid) {
             }
         }
         
+    }
+
+
+
+    // LC - 1334. Find the City With the Smallest Number of Neighbors at a Threshold Distance
+    int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
+        vector<vector<int>> adjMatrix(n,vector<int>(n, 1e8));
+
+        for(auto e:edges){
+            int u = e[0];
+            int v = e[1];
+            int wt = e[2];
+            adjMatrix[u][v] = wt;
+            adjMatrix[v][u] = wt;
+        }
+
+        floydWarshall(adjMatrix);
+
+        int minCityCount = INT_MAX;
+        pair<int , int> p = {minCityCount,-1} ;// city count , city
+        for(int row = 0 ; row<n ; row++){
+            int cityCount = 0;
+            for(int col = 0; col< n ; col++){
+                if(adjMatrix[row][col]<=distanceThreshold) cityCount++;
+            }
+            if(cityCount < minCityCount){
+                minCityCount = cityCount;
+                p = {minCityCount , row};
+            }
+            else if (cityCount == minCityCount){
+                if(p.second<row)p.second = row;
+            }
+        }
+        return p.second;
     }
