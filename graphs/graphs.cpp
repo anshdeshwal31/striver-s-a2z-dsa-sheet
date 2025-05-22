@@ -987,6 +987,8 @@ class DisjointSet {
     }
 };
 
+
+
 class Solution {
 public:
     vector<vector<string>> accountsMerge(vector<vector<string>> &details) {
@@ -1027,5 +1029,76 @@ public:
         }
         sort(ans.begin(), ans.end());
         return ans;
+    }
+};
+
+
+
+// Number Of Islands(Number of islands 2 on leetcode) - https://www.geeksforgeeks.org/problems/number-of-islands/1
+
+class Solution {
+public:
+    vector<int> numOfIslands(int n, int m, vector<vector<int>> &operators) {
+        vector<vector<int>> grid(n, vector<int>(m, 0));
+        vector<int> parent(n * m, -1);
+        vector<int> rank(n * m, 0);
+        vector<int> res;
+        int islands = 0;
+
+        function<int(int)> find = [&](int x) {
+            if (parent[x] != x)
+                parent[x] = find(parent[x]);
+            return parent[x];
+        };
+
+        // directions: right, down, left, up
+        vector<pair<int, int>> dirs;
+        dirs.push_back(make_pair(0, 1));
+        dirs.push_back(make_pair(1, 0));
+        dirs.push_back(make_pair(0, -1));
+        dirs.push_back(make_pair(-1, 0));
+
+        for (int i = 0; i < operators.size(); ++i) {
+            int x = operators[i][0];
+            int y = operators[i][1];
+            int node = x * m + y;
+
+            if (grid[x][y] == 1) {
+                res.push_back(islands);
+                continue;
+            }
+
+            grid[x][y] = 1;
+            parent[node] = node;
+            islands++;
+
+            for (int d = 0; d < 4; ++d) {
+                int nx = x + dirs[d].first;
+                int ny = y + dirs[d].second;
+
+                if (nx >= 0 && ny >= 0 && nx < n && ny < m && grid[nx][ny] == 1) {
+                    int neighbor = nx * m + ny;
+                    int parentNode = find(node);
+                    int parentNeighbor = find(neighbor);
+
+                    if (parentNode != parentNeighbor) {
+                        // union by rank
+                        if (rank[parentNode] > rank[parentNeighbor]) {
+                            parent[parentNeighbor] = parentNode;
+                        } else if (rank[parentNeighbor] > rank[parentNode]) {
+                            parent[parentNode] = parentNeighbor;
+                        } else {
+                            parent[parentNeighbor] = parentNode;
+                            rank[parentNode]++;
+                        }
+                        islands--; // merged two islands into one
+                    }
+                }
+            }
+
+            res.push_back(islands);
+        }
+
+        return res;
     }
 };
