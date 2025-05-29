@@ -1102,3 +1102,129 @@ public:
         return res;
     }
 };
+
+
+
+
+// LC 827 - Making a large island
+class disjointSet{
+    public:
+
+    vector<int>size;
+    vector<int>rank;
+    vector<int>parent;
+
+    disjointSet(int n ){
+        size.resize(n,1);
+        rank.resize(n,0);
+        parent.resize(n);
+
+        for(int i = 0; i <n;i++)parent[i]=i;
+    }
+
+    int findParent(int c){
+        if(c == parent[c]) return c;
+
+        return parent[c] = findParent(parent[c]);
+    }
+
+    void unionByRank(int a , int b){
+        int parentA = findParent(a);
+        int parentB = findParent(b);
+
+        if(parentA== parentB)return;
+
+        if(rank[parentA]>rank[parentB]){
+            parent[parentB] = parentA;
+        }
+        else if(rank[parentB]>rank[parentA]){
+            parent[parentA] = parentB;
+        }
+        else{
+            parent[parentB] = parentA;
+            rank[parentA]++;
+        }
+    }
+
+    void unionBySize(int a , int b){
+        int parentA = findParent(a);
+        int parentB  = findParent(b);
+
+        if(parentA== parentB)return;
+
+        if(size[parentA] >size[parentB]){
+            parent[parentB] = parentA;
+            size[parentA] += size[parentB];
+        }
+        else{
+            parent[parentA] = parentB;
+            size[parentB]+=size[parentA];
+        }
+    }
+
+};
+
+class Solution {
+public:
+int largestIsland(vector<vector<int>>& grid) {
+    int rowSize = grid.size();
+    int colSize = grid[0].size();
+
+    disjointSet ds(rowSize*colSize);
+    vector<pair<int , int>> dir = {{0,-1},{1,0},{0,1},{-1,0}};  // left , down , right , up
+    set<int> s;
+    int maxArea= 0;
+
+    for(int i = 0; i < rowSize; i++) {
+        for(int j = 0; j < colSize; j++) {
+            if(grid[i][j] == 1) {
+                for(auto d : dir) {
+                    int ny = i + d.first;
+                    int nx = j + d.second;
+                    if(ny >= 0 && ny < rowSize && nx >= 0 && nx < colSize && grid[ny][nx] == 1) { // bounds + 1 check
+                        int node1 = i * colSize + j;
+                        int node2 = ny * colSize + nx;
+                        ds.unionBySize(node1, node2);
+                    }
+                }
+            }
+        }
+    }
+
+    bool hasZero = false;
+
+    for(int i = 0 ; i < rowSize; i++){
+        for(int j = 0 ; j < colSize; j++){
+            if(grid[i][j]==0){
+                int tempArea = 1;
+                int node = i*colSize+j;
+
+                for(auto d: dir){
+                    int ny = i+d.first;
+                    int nx = j+d.second;
+
+                    if(ny >= 0 && ny < rowSize && nx >= 0 && nx < colSize && grid[ny][nx] == 1){
+                        int neighbour = ny*colSize+nx;
+                        int par = ds.findParent(neighbour);
+                        if(s.find(par) == s.end()){
+                            tempArea += ds.size[par];
+                            s.insert(par);
+                        }
+                    }
+                }
+                s.clear();
+                maxArea = max(maxArea,tempArea);
+            }
+        }
+    }
+
+    if(!hasZero){
+        for(int i = 0; i < rowSize * colSize; i++){
+            if(ds.findParent(i) == i)
+                maxArea = max(maxArea, ds.size[i]);
+        }
+    }
+
+    return maxArea;
+}
+};
