@@ -1228,3 +1228,55 @@ int largestIsland(vector<vector<int>>& grid) {
     return maxArea;
 }
 };
+
+
+
+// LC 1192 - critical connections in a network
+void dfs(int node , vector<int>&dist , vector<int>& low , vector<int>& visited , vector<vector<int>>& adjList , vector<vector<int>>& result,int& parent ,int& timer){
+
+    visited[node] = 1;
+    dist[node] = low[node] = timer++;
+    
+    for(auto neigb:adjList[node]){
+        if(neigb == parent)continue;
+
+        if(!visited[neigb]){
+            dfs(neigb,dist ,low ,visited,adjList,result,node ,timer);
+            low[node] = min(low[node],low[neigb]);
+            
+            if(low[neigb]>dist[node]){
+                result.push_back({node,neigb});
+            }
+        }
+        // back edge
+        else{
+            low[node] = min(low[node],dist[neigb]);
+        }
+    }
+}
+
+vector<vector<int>> criticalConnections(int n, vector<vector<int>>& connections) {
+    vector<int>dist(n,-1);
+    vector<int>low(n,-1);
+    vector<int>visited(n,0);
+    vector<vector<int>> result;
+    vector<vector<int>> adjList(n);
+
+
+    for(int i = 0 ; i<connections.size() ; i++){
+        int u = connections[i][0];
+        int v = connections[i][1];
+        adjList[u].push_back(v);
+        adjList[v].push_back(u);
+    }
+
+    int parent = -1;
+    int timer = 0;
+
+    for(int i = 0 ;  i < adjList.size(); i ++){
+        if(!visited[i]){
+            dfs(i,dist,low ,visited,adjList,result , parent , timer);
+        }
+    }
+    return result;
+}
