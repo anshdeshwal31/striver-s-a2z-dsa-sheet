@@ -1231,7 +1231,7 @@ int largestIsland(vector<vector<int>>& grid) {
 
 
 
-// LC 1192 - critical connections in a network
+// LC 1192 - critical connections in a network/tarjan's algo to find bridges in a graph
 void dfs(int node , vector<int>&dist , vector<int>& low , vector<int>& visited , vector<vector<int>>& adjList , vector<vector<int>>& result,int& parent ,int& timer){
 
     visited[node] = 1;
