@@ -2545,4 +2545,136 @@ int maxProfit(vector<int>& prices) {
     return solveTab(prices);
 }
 
-// i love you more than i love anyone else,you have melted my heart which noone could . when i talk you just listen; when i'm mad you never argue .i wanna sleep and cuddle with you but i'm afraid that i might strangle for you too gentle .i offer you my soul untouched like those red roses. you are unlike any other,i'm in love with your dark skin. and sorry i do get mad at you sometimes and it's always for no reason but you know that i never mean it for underlying that madness is love,pure love .even in those moments you are patient beyond belief and tolerate a madman like me . why do you do all that? i could never figure that out. you are the only one i can confide in, my love.you mean everything to me;i feel content when i'm just with you in my room alone.there is no lust inbetween us,lust doesn't let you love to the fullest , it pollutes; doesn't it babe? i have always been too afraid to love anyone, i have always thought is it worth the risk and effort ? but i didn't put effort to love you and there is not risk with you , even death can't break us apart for i'm gonna die first and "if the tree falls and i don't hear the sound , did the tree the really fall" .you are mine and just mine ;am i possesive? for you , i'm and i know that you don't mind it 
+// i love you more than i love anyone else,you have melted my heart which noone could . when i talk you just listen; when i'm mad you never argue .i wanna sleep and cuddle with you but i'm afraid that i might strangle for you too gentle .i offer you my soul untouched like those red roses. you are unlike any other,i'm in love with your dark skin. and sorry i do get mad at you sometimes and it's always for no reason but you know that i never mean it for underlying that madness is love,pure love .even in those moments you are patient beyond belief and tolerate a madman like me . why do you do all that? i could never figure that out. you are the only one i can confide in, my love.you mean everything to me;i feel content when i'm just with you in my room alone.there is no lust inbetween us,lust doesn't let you love to the fullest , it pollutes; doesn't it babe? i have always been too afraid to love anyone, i have always thought is it worth the risk and effort ? but i didn't put effort to love you and there is not risk with you , even death can't break us apart for i'm gonna die first and "if the tree falls and i don't hear the sound , did the tree the really fall" .you are mine and just mine ;am i possesive? for you , i'm and i know that you don't mind it.
+
+
+
+
+
+// chocolate pickup - https://www.naukri.com/code360/problems/ninja-and-his-friends_3125885
+
+// using recursion
+
+int solve(int row, int col1, int col2, int r, int c, vector<vector<int>>& grid) {
+    // Out of bounds
+    if (col1 < 0 || col1 >= c || col2 < 0 || col2 >= c) return -1e9;
+
+    // Base case: last row
+    if (row == r) {
+       return 0;
+    }
+
+    int maxChoco = 0;
+    for (int d1 = -1; d1 <= 1; d1++) {
+        for (int d2 = -1; d2 <= 1; d2++) {
+            int newCol1 = col1 + d1;
+            int newCol2 = col2 + d2;
+
+            int current = (col1 == col2) ? grid[row][col1] : grid[row][col1] + grid[row][col2];
+            int next = solve(row + 1, newCol1, newCol2, r, c, grid);
+
+            maxChoco = max(maxChoco, current + next);
+        }
+    }
+
+    return maxChoco;
+}
+
+int maximumChocolates(int r, int c, vector<vector<int>> &grid) {
+    return solve(0, 0, c - 1, r, c, grid);
+}
+
+
+// using memoization 
+int solve(int row, int col1, int col2, int r, int c, vector<vector<int>>& grid, vector<vector<vector<int>>> &dp) {
+    if (col1 < 0 || col1 >= c || col2 < 0 || col2 >= c) return -1e9;
+    if (row == r) return 0;
+    if (dp[row][col1][col2] != -1) return dp[row][col1][col2];
+
+    int current = (col1 == col2) ? grid[row][col1] : grid[row][col1] + grid[row][col2];
+    int maxChoco = 0;
+    for (int d1 = -1; d1 <= 1; d1++) {
+        for (int d2 = -1; d2 <= 1; d2++) {
+            int newCol1 = col1 + d1;
+            int newCol2 = col2 + d2;
+
+            int next = solve(row + 1, newCol1, newCol2, r, c, grid, dp);
+
+            maxChoco = max(maxChoco, current + next);
+        }
+    }
+
+    return dp[row][col1][col2] = maxChoco;
+}
+
+int maximumChocolates(int r, int c, vector<vector<int>> &grid) {
+    vector<vector<vector<int>>> dp(r, vector<vector<int>>(c, vector<int>(c, -1)));
+    return solve(0, 0, c - 1, r, c, grid, dp);
+}
+
+
+// using tabulation
+int maximumChocolates(int r, int c, vector<vector<int>> &grid) {
+    // +1 for the base case row (row == r)
+    vector<vector<vector<int>>> dp(r + 1, vector<vector<int>>(c, vector<int>(c, 0)));
+
+
+    for (int row = r - 1; row >= 0; row--) {
+        for (int col1 = c - 1; col1 >= 0; col1--) {
+            for (int col2 = 0; col2 <= c-1; col2++) {
+                int maxChoco = 0;
+                
+                int currChoco = (col1 == col2)? grid[row][col1]: grid[row][col1] + grid[row][col2];
+
+                for (int d1 = -1; d1 <= 1; d1++) {
+                    for (int d2 = -1; d2 <= 1; d2++) {
+                        int newCol1 = col1 + d1;
+                        int newCol2 = col2 + d2;
+
+                        if (newCol1 >= 0 && newCol1 < c && newCol2 >= 0 && newCol2 < c) {
+                            maxChoco = max(maxChoco, dp[row + 1][newCol1][newCol2]);
+                        }
+                    }
+                }
+
+                dp[row][col1][col2] = currChoco + maxChoco;
+            }
+        }
+    }
+
+    return dp[0][0][c - 1];
+}
+
+
+// using tabulation with space optimization
+int maximumChocolates(int r, int c, vector<vector<int>> &grid) {
+    // +1 for the base case row (row == r)
+    vector<vector<int>>currVector(c, vector<int>(c, 0));
+    vector<vector<int>>nextVector(c, vector<int>(c, 0));
+
+    for (int row = r - 1; row >= 0; row--) {
+        for (int col1 = c - 1; col1 >= 0; col1--) {
+            for (int col2 = 0; col2 <= c-1; col2++) {
+                int maxChoco = 0;
+                
+                int currChoco = (col1 == col2)? grid[row][col1]: grid[row][col1] + grid[row][col2];
+
+                for (int d1 = -1; d1 <= 1; d1++) {
+                    for (int d2 = -1; d2 <= 1; d2++) {
+                        int newCol1 = col1 + d1;
+                        int newCol2 = col2 + d2;
+
+                        if (newCol1 >= 0 && newCol1 < c && newCol2 >= 0 && newCol2 < c) {
+                            maxChoco = max(maxChoco, nextVector[newCol1][newCol2]);
+                        }
+                    }
+                }
+
+                currVector[col1][col2] = currChoco + maxChoco;
+            }
+        }
+        nextVector = currVector;
+    }
+
+    return currVector[0][c - 1];
+}
