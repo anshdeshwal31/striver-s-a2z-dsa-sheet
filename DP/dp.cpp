@@ -2678,3 +2678,132 @@ int maximumChocolates(int r, int c, vector<vector<int>> &grid) {
 
     return currVector[0][c - 1];
 }
+
+
+
+// LC - 2035. Partition Array Into Two Arrays to Minimize Sum Difference
+
+// using recursion
+
+int solve(int index, int count, int sum, int n, int totalSum, vector<int>& nums) {
+    // Base case: we've selected n elements
+    if (count == n) {
+        int otherSum = totalSum - sum;
+        return abs(sum - otherSum);
+    }
+
+    // End of array
+    if (index == nums.size()) return INT_MAX;
+
+    // Option 1: pick current element
+    int pick = solve(index + 1, count + 1, sum + nums[index], n, totalSum, nums);
+
+    // Option 2: skip current element
+    int notPick = solve(index + 1, count, sum, n, totalSum, nums);
+
+    return min(pick, notPick);
+}
+
+int minimumDifference(vector<int>& nums) {
+    int totalSum = accumulate(nums.begin(), nums.end(), 0);
+    int n = nums.size() / 2;
+    return solve(0, 0, 0, n, totalSum, nums);
+}
+
+
+int solve2(int child , int cookie ,vector<int>& g, vector<int>& s ){
+    if(child>=g.size()|| cookie>=s.size()) return 0;
+
+    int choice1 = 0;
+    int choice2 = 0;
+    int choice3 = 0;
+    if(g[child]<=s[cookie]){
+        choice1 = 1+ solve2(child+1,cookie+1,g,s);
+    }
+
+    choice2 = solve2(child+1,cookie,g,s);
+    choice3 = solve2(child, cookie+1,g,s);
+
+    return max(choice1,max(choice2,choice3));
+}
+
+int findContentChildren(vector<int>& g, vector<int>& s) {
+    return solve2(0,0,g,s);
+}
+
+
+
+// LC - 494. Target Sum
+
+// using recursion
+
+int solve3(int i , int sum , vector<int>& nums, int target){
+    if(i==nums.size()){
+        if(sum == target) return 1;
+        return 0;
+    } 
+
+    int addChoice = solve3(i+1,sum+nums[i],nums, target);
+    int subtractChoice = solve3(i+1,sum-nums[i],nums , target);
+
+    return addChoice+subtractChoice;
+}
+int findTargetSumWays(vector<int>& nums, int target) {
+    return solve3(0,0,nums, target);
+}
+
+// using memoization
+int solve3(int i, int sum, vector<int>& nums, int target, unordered_map<string, int>& dp) {
+    if (i == nums.size()) {
+        return (sum == target) ? 1 : 0;
+    }
+
+    string key = to_string(i) + "," + to_string(sum);
+    if (dp.find(key) != dp.end()) return dp[key];
+
+    int addChoice = solve3(i+1, sum + nums[i], nums, target, dp);
+    int subtractChoice = solve3(i+1, sum - nums[i], nums, target, dp);
+
+    return dp[key] = addChoice + subtractChoice;
+}
+
+int findTargetSumWays(vector<int>& nums, int target) {
+    unordered_map<string, int> dp;
+    return solve3(0, 0, nums, target, dp);
+}
+
+
+/// using tabulation
+int solveTab(vector<int>& nums, int target) {
+    int n = nums.size();
+    int arraySum = accumulate(nums.begin(), nums.end(), 0);
+
+    unordered_map<string, int> dp;
+
+    // Base case initialization at i==n
+    for (int s = -arraySum; s <= arraySum; s++) {
+        string key = to_string(n) + "," + to_string(s);
+        dp[key] = (s == target) ? 1 : 0;
+    }
+
+    // Bottom-up tabulation
+    for (int i = n-1 ; i >= 0; i--) {
+        for (int s = -arraySum; s <= arraySum; s++) {
+            string keyAdd = to_string(i + 1) + "," + to_string(s + nums[i]);
+            string keySubtract = to_string(i + 1) + "," + to_string(s - nums[i]);
+
+            int addChoice = dp.count(keyAdd) ? dp[keyAdd] : 0;
+            int subtractChoice = dp.count(keySubtract) ? dp[keySubtract] : 0;
+
+            string key = to_string(i) + "," + to_string(s);
+            dp[key] = addChoice + subtractChoice;
+        }
+    }
+
+    string ansKey = to_string(0) + "," + to_string(0);
+    return dp.count(ansKey) ? dp[ansKey] : 0;
+}
+
+int findTargetSumWays(vector<int>& nums, int target) {
+    return solveTab(nums, target);
+}
