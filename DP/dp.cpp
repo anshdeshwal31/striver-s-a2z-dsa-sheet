@@ -2807,3 +2807,54 @@ int solveTab(vector<int>& nums, int target) {
 int findTargetSumWays(vector<int>& nums, int target) {
     return solveTab(nums, target);
 }
+
+int solve(vector<int>& coins , int amount){
+    if(amount == 0) return 1;
+    if(amount<=0) return 0;
+    
+    int ans = 0 ;
+    for(int i = 0 ; i < coins.size(); i ++){
+        ans+=solve(coins , amount-coins[i]);
+    }
+    return ans;
+}
+
+int change(int amount, vector<int>& coins) {
+    
+}
+
+
+// LC 518 - coin change 2
+// using recursion
+int solve2(int i , vector<int>& coins , int amount){
+    if(i==coins.size()) return 0;
+    if(amount == 0) return 1;
+    if(amount<=0) return 0;
+
+    int take = solve2(i,coins , amount -coins[i]);
+    int skip = solve2(i+1, coins , amount);
+    return take + skip;
+
+}
+int change(int amount, vector<int>& coins) {
+    return solve2(0, coins , amount);
+}
+
+// using memoization
+int solve2(int i, vector<int>& coins, int amount, vector<vector<int>>& dp) {
+    if (i == coins.size()) return (amount == 0) ? 1 : 0;
+    if (amount < 0) return 0;
+
+    if (dp[i][amount] != -1) return dp[i][amount];
+
+    int take = solve2(i, coins, amount - coins[i], dp);
+    int skip = solve2(i + 1, coins, amount, dp);
+
+    return dp[i][amount] = take + skip;
+}
+
+int change(int amount, vector<int>& coins) {
+    int n = coins.size();
+    vector<vector<int>> dp(n + 1, vector<int>(amount + 1, -1));
+    return solve2(0, coins, amount, dp);
+}
