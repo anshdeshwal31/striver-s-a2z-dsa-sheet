@@ -71,10 +71,49 @@ bool canJump(vector<int>& nums) {
 bool canJump(vector<int>& nums) {
     int maxReach = 0;
     int n = nums.size();
-
+    
     for (int i = 0; i < n; i++) {
         if (i > maxReach) return false; // if unreachable
         maxReach = max(maxReach, i + nums[i]); // update farthest reachable index
     }
     return true;
+}
+
+
+// LC 45 - jump game 2
+
+// using recursion
+int jumpFrom(int i, vector<int>& nums) {
+    int n = nums.size();
+    if (i >= n - 1) return 0; // reached or passed the last index
+
+    int minJumps = INT_MAX;
+    for (int j = 1; j <= nums[i]; j++) {
+        int nextJumps = jumpFrom(i + j, nums);
+        if (nextJumps != INT_MAX)
+            minJumps = min(minJumps, 1 + nextJumps);
+    }
+
+    return minJumps;
+}
+
+int jump(vector<int>& nums) {
+    return jumpFrom(0, nums);
+}
+
+// using greedy approach
+int jump(vector<int>& nums) {
+    int res = 0;
+    int l = 0, r = 0;
+
+    int farthest = 0;
+    while (r < nums.size() - 1) {
+        for (int i = l; i <= r; i++) {
+            farthest = max(farthest, i + nums[i]);
+        }
+        l = r + 1;
+        r = farthest;
+        res++;
+    }
+    return res;
 }
