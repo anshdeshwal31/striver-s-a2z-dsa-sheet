@@ -46,3 +46,35 @@ bool checkValidString(string s) {
 
     return low == 0;
 }
+
+
+
+// LC 55 - jump game
+
+// using recursion
+bool solve(int i , vector<int>& nums){
+    if(i==nums.size()-1) return true;
+    
+    int currentValue = nums[i];
+    for(int  j = 1; j <= currentValue; j++){
+        if(solve(i+j,nums)) return true;
+    }
+    return false;
+}
+
+bool canJump(vector<int>& nums) {
+    return solve(0,nums);
+}
+
+
+// using greedy approach 
+bool canJump(vector<int>& nums) {
+    int maxReach = 0;
+    int n = nums.size();
+
+    for (int i = 0; i < n; i++) {
+        if (i > maxReach) return false; // if unreachable
+        maxReach = max(maxReach, i + nums[i]); // update farthest reachable index
+    }
+    return true;
+}
