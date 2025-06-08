@@ -571,3 +571,41 @@ public:
         return inorder;
     }
 };
+
+
+
+// LC-94
+
+// inorder traversal using morris traversal
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> inorder;
+        TreeNode* cur = root;
+        
+        while (cur != NULL) {
+
+            if (cur->left == NULL) {
+                inorder.push_back(cur->val);
+                cur = cur->right;
+            } 
+            else {
+                // If the left child is not NULL,
+                // find the predecessor (rightmost node
+                // in the left subtree)
+                TreeNode* prev = cur->left;
+                while (prev->right && prev->right != cur) {
+                    prev = prev->right;
+                }
+                
+                if (prev->right == NULL) {
+                    prev->right = cur;
+                    cur = cur->left;
+                } else {
+                    prev->right = NULL;
+                    inorder.push_back(cur->val);
+                    cur = cur->right;
+                }
+            }
+        }
+        
+        return inorder;
+    }
