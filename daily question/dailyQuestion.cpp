@@ -46,3 +46,53 @@ vector<int> lexicalOrder(int n) {
 
     return res;
 }
+
+
+
+// LC 440 -  K-th Smallest in Lexicographical Order
+
+// // using recursion 
+// int dfs(int cur, int n , int& k ){
+//     if(cur>n)return 0;
+//     if(cur!=0)k--;
+//     if(k==0) return cur;
+
+//     int ans;
+//     for(int i = 0; i <=9; i++){
+//         if(cur==0  && i==0)continue;
+//         ans = max(ans,dfs(cur*10+i,n,k));
+//     }
+//     return ans;
+// }
+
+
+// int findKthNumber(int n, int k) {
+//     int ans;
+//     return dfs(0,n,k);
+// }
+
+int findKthNumber(int n, int k) {
+    int currNum = 1;
+    k--; // starting from 1, so first number is 1st lex num
+
+    while (k > 0) {
+        long steps = 0, first = currNum, last = currNum;
+        
+        // count number of numbers in the lex range [first, last] <= n
+        while (first <= n) {
+            steps += min((long)n, last) - first + 1;
+            first *= 10;
+            last = last * 10 + 9;
+        }
+
+        if (steps <= k) {
+            currNum++;  // move to next sibling
+            k -= steps;
+        } else {
+            currNum *= 10; // move to first child
+            k--;
+        }
+    }
+
+    return currNum;
+}
