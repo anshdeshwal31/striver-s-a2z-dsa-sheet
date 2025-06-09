@@ -117,3 +117,32 @@ int jump(vector<int>& nums) {
     }
     return res;
 }
+
+
+
+// activity selection - https://www.geeksforgeeks.org/problems/activity-selection-1587115620/1
+
+static bool helpSort(pair<int,int>& a, pair<int,int>& b) {
+    return a.second < b.second;  // sort by finish time ascending
+}
+
+int activitySelection(vector<int>& start, vector<int>& finish) {
+    vector<pair<int, int>> activity;
+    for (int i = 0; i < start.size(); i++) 
+        activity.push_back({start[i], finish[i]});
+
+    sort(activity.begin(), activity.end(), helpSort);
+
+    int ans = 0;
+    int endTime = -1;
+
+    for (int i = 0; i < activity.size(); i++) {
+        int startTime = activity[i].first;
+        if (startTime > endTime) {
+            endTime = activity[i].second;
+            ans++;
+        }
+    }
+
+    return ans;
+}
