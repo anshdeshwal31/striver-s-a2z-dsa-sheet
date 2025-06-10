@@ -171,3 +171,69 @@ int findPlatform(vector<int>& arr, vector<int>& dep) {
 
     return max_platforms;
 }
+
+
+
+// job sequencing - https://www.geeksforgeeks.org/problems/job-sequencing-problem-1587115620/1
+
+vector<int> jobSequencing(vector<int> &deadline, vector<int> &profit) {
+    int n = deadline.size();
+
+    // Pair profit with deadline
+    vector<pair<int, int>> jobs;
+    for (int i = 0; i < n; i++) {
+        jobs.push_back({profit[i], deadline[i]});
+    }
+
+    // Sort jobs by profit descending
+    sort(jobs.rbegin(), jobs.rend());
+
+    // Find max deadline
+    int maxDeadline = 0;
+    for (auto &job : jobs) {
+        maxDeadline = max(maxDeadline, job.second);
+    }
+
+    // Time slots array, initialized to -1
+    vector<int> slot(maxDeadline + 1, -1);
+
+    int countJobs = 0, totalProfit = 0;
+
+    for (auto &job : jobs) {
+        int p = job.first;
+        int d = job.second;
+
+        // Find free slot from d to 1
+        for (int j = d; j >= 1; j--) {
+            if (slot[j] == -1) {
+                slot[j] = p;   // Occupy slot
+                countJobs++;
+                totalProfit += p;
+                break;
+            }
+        }
+    }
+
+    return {countJobs, totalProfit};
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
