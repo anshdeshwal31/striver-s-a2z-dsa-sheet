@@ -218,22 +218,27 @@ vector<int> jobSequencing(vector<int> &deadline, vector<int> &profit) {
 }
 
 
+// LC 135 - candy
 
+int candy(vector<int>& ratings) {
+    int n = ratings.size();
+    vector<int> toffee(n, 1);
 
+    // Left to right pass
+    for (int i = 1; i < n; i++) {
+        if (ratings[i] > ratings[i-1]) {
+            toffee[i] = toffee[i-1] + 1;
+        }
+    }
 
+    // Right to left pass (with if condition)
+    for (int i = n-2; i >= 0; i--) {
+        if (ratings[i] > ratings[i+1]) {
+            if (toffee[i] <= toffee[i+1]) {
+                toffee[i] = toffee[i+1] + 1;
+            }
+        }
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return accumulate(toffee.begin(), toffee.end(), 0);
+}
