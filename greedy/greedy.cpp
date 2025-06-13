@@ -242,3 +242,91 @@ int candy(vector<int>& ratings) {
 
     return accumulate(toffee.begin(), toffee.end(), 0);
 }
+
+
+// LC 57 - insert interval 
+
+    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+    vector<vector<int>> result;
+    int i = 0, n = intervals.size();
+
+    // Add intervals before newInterval
+    while (i < n && intervals[i][1] < newInterval[0]) {
+        result.push_back(intervals[i]);
+        i++;
+    }
+
+    // Merge overlapping intervals with newInterval
+    while (i < n && intervals[i][0] <= newInterval[1]) {
+        newInterval[0] = min(newInterval[0], intervals[i][0]);
+        newInterval[1] = max(newInterval[1], intervals[i][1]);
+        i++;
+    }
+    result.push_back(newInterval);
+
+    // Add remaining intervals after newInterval
+    while (i < n) {
+        result.push_back(intervals[i]);
+        i++;
+    }
+
+    return result;
+}
+
+
+// LC 56 - merge interval
+
+vector<vector<int>> merge(vector<vector<int>> &intervals) {
+    vector<vector<int>> result;
+    int n = intervals.size();
+
+    if (n == 0) return result;
+
+    // Sort first
+    sort(intervals.begin(), intervals.end());
+
+    int i = 0;
+    while (i < n - 1) {
+        if (intervals[i][1] < intervals[i + 1][0]) {
+            result.push_back(intervals[i]);
+            i++;
+        } else {
+            int startInterval = intervals[i][0]; // start from current
+            int endInterval = intervals[i][1];
+            while (i < n - 1 && endInterval >= intervals[i + 1][0]) {
+                endInterval = max(endInterval, intervals[i + 1][1]);
+                i++;
+            }
+            result.push_back({startInterval, endInterval}); // push merged
+            i++;
+        }
+    }
+    if (i < n) { // if last interval wasn't merged
+        result.push_back(intervals[i]);
+    }
+    return result;
+}
+
+
+
+
+// LC 435 - non - overlapping intervals
+
+   int eraseOverlapIntervals(vector<vector<int>> &intervals) {
+    if (intervals.empty()) return 0;
+
+    sort(intervals.begin(), intervals.end(), [](auto &a, auto &b) {
+        return a[1] < b[1];
+    });
+
+    int removals = 0;
+    int lastEnd = intervals[0][1];
+    for (int i = 1; i < intervals.size(); i++) {
+        if (intervals[i][0] < lastEnd) { // overlapping
+            removals++;
+        } else { // non-overlapping
+            lastEnd = intervals[i][1];
+        }
+    }
+    return removals;
+}
