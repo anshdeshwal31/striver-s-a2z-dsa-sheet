@@ -128,5 +128,40 @@ class Node {
 
 // LC 99 - recover binary search tree
 
-
 // 653. Two Sum IV - Input is a BST
+
+
+
+
+// largest BST in a binary tree = https://www.geeksforgeeks.org/problems/largest-bst/1
+
+  tuple<int, bool, int, int> solve(Node* root) {
+        if (!root)
+            return make_tuple(0, true, INT_MAX, INT_MIN);
+    
+        if (!root->left && !root->right)
+            return make_tuple(1, true, root->data, root->data);
+    
+        auto leftCall = solve(root->left);
+        auto rightCall = solve(root->right);
+    
+        int leftSize, rightSize, leftMin, leftMax, rightMin, rightMax;
+        bool isLeftBST, isRightBST;
+    
+        tie(leftSize, isLeftBST, leftMin, leftMax) = leftCall;
+        tie(rightSize, isRightBST, rightMin, rightMax) = rightCall;
+    
+        if (isLeftBST && isRightBST && leftMax < root->data && root->data < rightMin) {
+            int totalSize = leftSize + rightSize + 1;
+            int minVal = min(root->data, leftMin);
+            int maxVal = max(root->data, rightMax);
+            return make_tuple(totalSize, true, minVal, maxVal);
+        }
+    
+    return make_tuple(max(leftSize, rightSize), false, 0, 0);
+}
+
+
+int largestBst(Node* root) {
+    return get<0>(solve(root));
+}
