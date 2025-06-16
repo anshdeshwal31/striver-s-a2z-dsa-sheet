@@ -2860,3 +2860,27 @@ int change(int amount, vector<int>& coins) {
 }
 
 
+
+
+// unbounded knapsack with duplicate items - https://www.geeksforgeeks.org/problems/knapsack-with-duplicate-items4201/1
+
+int solve(int i, vector<int>& val, vector<int>& wt, int capacity, int n) {
+    // Base Case: no more items or no capacity
+    if (i == n || capacity == 0) return 0;
+
+    // If we can pick current item
+    if (wt[i] <= capacity) {
+        // Two choices: pick it (stay at i) or skip
+        int pick = val[i] + solve(i, val, wt, capacity - wt[i], n);
+        int notPick = solve(i + 1, val, wt, capacity, n);
+        return max(pick, notPick);
+    }
+    else {
+        // Can't pick this item, move to next
+        return solve(i + 1, val, wt, capacity, n);
+    }
+}
+int knapSack(vector<int>& val, vector<int>& wt, int capacity) {
+        int n = val.size();
+        return solve(0, val, wt, capacity, n);
+}
