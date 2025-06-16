@@ -111,3 +111,18 @@ TreeNode* bstFromPreorder(vector<int>& preorder) {
     sort(inorder.begin() , inorder.end());
 
 }
+
+
+class Node {
+    public: 
+    Node* next;
+    int val;
+    Node(int val){
+        this->next = nullptr;
+        this->val = val;
+    }
+};
+
+
+// LC 173 - binary search tree iterator
+

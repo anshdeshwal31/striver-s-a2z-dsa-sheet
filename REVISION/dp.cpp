@@ -148,7 +148,6 @@ int ninjaTraining(int n, vector<vector<int>> &points){
 // tabulation using space optimization
 int solveOptimal(vector<vector<int>>& points){
     int n = points.size();
-    vector<vector<int>> dp(n+1,vector<int>(points[0].size()+1,0));
     vector<int> next(points.size()+1,0);
     vector<int> current(points.size()+1,0);
     
@@ -170,4 +169,50 @@ int solveOptimal(vector<vector<int>>& points){
 
 int ninjaTraining(int n, vector<vector<int>> &points){
     return solveOptimal(points);
+}
+
+
+int solve(int i , int j , int n , int m ){
+    if(i==n-1 && j==m-1) return 0;
+
+    int choice1 = 0;
+    int choice2 = 0;
+    if(i+1<n){
+         choice1 = 1+ solve(i+1,j,n,m);
+    }
+    if(j+1<m){
+         choice2 = 1+ solve(i,j+1,n,m);
+    }
+    return choice1+choice2;
+}
+
+
+// LC - 931. Minimum Falling Path Sum 
+
+// using recursion
+int solve(int row , int col , int rowSize , int colSize, vector<vector<int>>& matrix){
+    if(row == rowSize) return 0;
+
+    int choice1 = INT_MAX;
+    int choice2 = INT_MAX;
+    int choice3 = INT_MAX;
+
+    if(col-1>=0) choice1 = solve(row+1,col-1,rowSize,colSize,matrix);
+
+    choice2 = solve(row+1,col,rowSize,colSize,matrix);
+
+    if(col+1<colSize) choice3 = solve(row+1,col+1,rowSize,colSize,matrix);
+
+    return matrix[row][col] + min(choice1,min(choice2,choice3));
+ }
+
+int minFallingPathSum(vector<vector<int>>& matrix) {
+    int rowSize = matrix.size();
+    int colSize = matrix[0].size();
+
+    int minAns = INT_MAX;
+    for(int j = 0 ; j < colSize; j++){
+        minAns = min(solve(0,j,rowSize,colSize,matrix),minAns);
+    }
+    return minAns;
 }

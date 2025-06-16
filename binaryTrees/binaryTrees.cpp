@@ -609,3 +609,58 @@ public:
         
         return inorder;
     }
+
+
+
+// preorder traversal using morris traversal
+
+vector<int> preorderTraversal(TreeNode* root) {
+    TreeNode* curr = root;
+
+    vector<int>preOrder;
+
+    while(curr){
+        if(!curr->left){
+            preOrder.push_back(curr->val);
+            curr = curr->right;
+        }  
+        else{
+            preOrder.push_back(curr->val);
+
+            TreeNode* temp = curr->left;
+            while(temp->right && temp->right!=curr->right){
+                temp = temp->right;
+            }
+            if(!temp->right){
+                temp->right = curr->right;
+            }
+            else{
+                temp->right=nullptr;
+            }
+        } 
+    }
+    return preOrder;
+}
+
+
+void solve(TreeNode* root , queue<TreeNode*>& q){
+    if(!root) return ;
+    q.push(root);
+    solve(root->left,q);
+    solve(root->right,q);
+}
+
+void flatten(TreeNode* root) {
+    queue<TreeNode*>q;
+    solve(root , q);
+
+    TreeNode* node = q.front();
+    q.pop();
+    while(!q.empty()){
+        node->left = nullptr;
+        node->right = q.front();
+        node = q.front();
+        q.pop();
+    }
+
+}
