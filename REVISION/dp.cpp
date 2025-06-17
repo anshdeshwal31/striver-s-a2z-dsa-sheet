@@ -419,3 +419,52 @@ int solve(int i , int j , string word1, string word2){
 int minDistance(string word1, string word2) {
     return solve(0,0,word1,word2);
 }
+
+
+// LC - 1092. Shortest Common Supersequence 
+
+// using recursion
+
+string shortestSupersequence(int i, int j, string& str1, string& str2) {
+    if(i == str1.size()) return str2.substr(j); // if str1 ends, take rest of str2
+    if(j == str2.size()) return str1.substr(i); // if str2 ends, take rest of str1
+
+    if(str1[i] == str2[j]) {
+        // If both characters match, include it once and move both
+        return str1[i] + shortestSupersequence(i+1, j+1, str1, str2);
+    } else {
+        // Else, try both options: take str1[i] or str2[j]
+        string option1 = str1[i] + shortestSupersequence(i+1, j, str1, str2);
+        string option2 = str2[j] + shortestSupersequence(i, j+1, str1, str2);
+
+        // Return the shorter one
+        return (option1.size() < option2.size()) ? option1 : option2;
+    }
+}
+
+string shortestCommonSupersequence(string str1, string str2) {
+    return shortestSupersequence(0, 0, str1, str2);
+}
+
+
+
+
+// LC - 115 Distinct subsequences
+
+// using recursion
+
+int countSubsequences(string s, string t, int i, int j) {
+    if (j == t.size()) return 1;
+    if (i == s.size()) return 0;
+
+    if (s[i] == t[j]) {
+        return countSubsequences(s, t, i + 1, j + 1) 
+               + countSubsequences(s, t, i + 1, j);
+    } else {
+        return countSubsequences(s, t, i + 1, j);
+    }
+}
+
+int numDistinct(string s, string t) {
+    return countSubsequences(s, t, 0, 0);
+}
