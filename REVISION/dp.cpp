@@ -398,3 +398,24 @@ int minInsertions(string s) {
     vector<vector<int>> dp(n,vector<int>(n,-1));
     return solveMem(0,n-1,s,dp);
 }
+
+
+
+// LC - 583. Delete Operation for Two Strings
+
+// using recursion
+
+int solve(int i , int j , string word1, string word2){
+    if(i == word1.size()) return word2.size()-j;
+    if(j == word2.size()) return word1.size()-i;
+    
+    if(word1[i]== word2[j]) return solve(i+1,j+1,word1,word2);
+
+    int deleteFrom1 = 1+ solve(i+1,j,word1,word2);
+    int deleteFrom2 = 1+ solve(i,j+1,word1,word2);
+    return min(deleteFrom1,deleteFrom2);
+}
+
+int minDistance(string word1, string word2) {
+    return solve(0,0,word1,word2);
+}
