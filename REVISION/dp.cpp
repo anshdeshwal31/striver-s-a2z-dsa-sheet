@@ -357,3 +357,44 @@ public:
         return ans;
     }
 };
+
+
+
+// LC - 1312. Minimum Insertion Steps to Make a String Palindrome
+
+// using recursion
+int solve(int i , int j , string& s){
+    if(i>=j) return 0;
+
+    if(s[i]==s[j]){
+        return solve(i+1, j-1, s);
+    }
+    int call1 = 1+ solve(i+1 ,j ,s);
+    int call2 = 1+ solve(i,j-1,s);
+    return min(call1,call2);
+}
+
+int minInsertions(string s) {
+    int n  = s.size();
+    return solve(0,n-1,s);
+}
+
+
+// using memoization
+int solveMem(int i , int j , string& s,vector<vector<int>>& dp){
+    if(i>=j) return 0;
+    if(dp[i][j]!=-1) return dp[i][j];
+
+    if(s[i]==s[j]){
+        return solveMem(i+1, j-1, s,dp);
+    }
+    int call1 = 1+ solveMem(i+1 ,j ,s,dp);
+    int call2 = 1+ solveMem(i,j-1,s,dp);
+    return dp[i][j] = min(call1,call2);
+}
+
+int minInsertions(string s) {
+    int n = s.size();
+    vector<vector<int>> dp(n,vector<int>(n,-1));
+    return solveMem(0,n-1,s,dp);
+}
