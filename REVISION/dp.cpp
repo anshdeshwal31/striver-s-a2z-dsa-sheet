@@ -248,3 +248,112 @@ int cutRod(vector<int>& price) {
 // LC - 1143. Longest Common Subsequence
 
 //  print LCS - https://www.naukri.com/code360/problems/print-longest-common-subsequence_8416383
+
+
+// using recursion
+void solve(int i , int j ,string& s1, string& s2,int len, int& ans){
+    if(i==s1.size() && j == s2.size()) return;
+
+    if(s1[i]==s2[j]){
+        len++;
+        ans = max(ans,len);
+        solve(i+1,j+1,s1,s2,len,ans);
+    }
+    else{
+        len = 0;
+        solve(i+1,j , s1,s2,len,ans); 
+        solve(i,j+1 , s1,s2,len,ans); 
+    }
+}
+
+int longestCommonSubstr(string& s1, string& s2) {
+    // your code here
+    int ans = 0;
+    solve(0,0,s1,s2,0,ans);
+    return ans;
+}
+
+
+// using memoization
+void solveMem(int i , int j ,string& s1, string& s2,int len, int& ans){
+    if(i==s1.size() && j == s2.size()) return;
+
+    if(s1[i]==s2[j]){
+        len++;
+        ans = max(ans,len);
+        solveMem(i+1,j+1,s1,s2,len,ans);
+    }
+    else{
+        len = 0;
+        solveMem(i+1,j , s1,s2,len,ans); 
+        solveMem(i,j+1 , s1,s2,len,ans); 
+    }
+}
+
+int longestCommonSubstr(string& s1, string& s2) {
+    // your code here
+    int ans = 0;
+    solveMem(0,0,s1,s2,0,ans);
+    return ans;
+}
+
+
+// longest common substring -https://www.geeksforgeeks.org/problems/longest-common-substring1452/1
+
+// using recursion 
+class Solution {
+public:
+    int solve(int i, int j, string& s1, string& s2, int& ans) {
+        if(i == s1.size() || j == s2.size()) return 0;
+
+        int res = 0;
+        if(s1[i] == s2[j]){
+            res = 1 + solve(i+1, j+1, s1, s2, ans);
+            ans = max(ans, res);
+        }
+
+        // Explore other possibilities independently — don't chain len
+        solve(i+1, j, s1, s2, ans);
+        solve(i, j+1, s1, s2, ans);
+
+        return res;
+    }
+
+    int longestCommonSubstr(string &s1, string &s2) {
+        int ans = 0;
+        solve(0, 0, s1, s2, ans);
+        return ans;
+    }
+};
+
+
+// using memoization 
+
+class Solution {
+public:
+    int solve(int i, int j, string& s1, string& s2, int& ans, vector<vector<int>> &dp) {
+        if(i == s1.size() || j == s2.size()) return 0;
+
+        if(dp[i][j] != -1) return dp[i][j];
+
+        int res = 0;
+        if(s1[i] == s2[j]){
+            res = 1 + solve(i+1, j+1, s1, s2, ans, dp);
+            ans = max(ans, res);
+        }
+
+        // Explore other paths independently (not chaining res here)
+        solve(i+1, j, s1, s2, ans, dp);
+        solve(i, j+1, s1, s2, ans, dp);
+
+        return dp[i][j] = res;
+    }
+
+    int longestCommonSubstr(string &s1, string &s2) {
+        int ans = 0;
+        int n = s1.size(), m = s2.size();
+        vector<vector<int>> dp(n, vector<int>(m, -1));
+        solve(0, 0, s1, s2, ans, dp);
+        return ans;
+    }
+};
