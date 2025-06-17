@@ -216,3 +216,29 @@ int minFallingPathSum(vector<vector<int>>& matrix) {
     }
     return minAns;
 }
+
+
+
+// rod cutting - https://www.geeksforgeeks.org/problems/rod-cutting0840/1
+
+// using recursion
+
+int solve(int n, vector<int>& price) {
+    // base case: rod length zero means no price
+    if (n == 0) return 0;
+
+    int ans = 0;
+    // try all possible first cuts from 1 to n
+    for (int i = 1; i <= n; i++) {
+        int cutPrice = price[i-1]; // price for cutting length i
+        int remainingPrice = solve(n - i, price); // solve for remaining rod
+        ans = max(ans, cutPrice + remainingPrice); // maximize the total
+    }
+
+    return ans;
+}
+
+int cutRod(vector<int>& price) {
+    int n = price.size();
+    return solve(n, price);
+}
