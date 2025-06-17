@@ -242,3 +242,7 @@ int cutRod(vector<int>& price) {
     int n = price.size();
     return solve(n, price);
 }
+
+
+
+// LC - 1143. Longest Common Subsequence
