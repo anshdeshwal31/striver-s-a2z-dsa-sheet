@@ -477,3 +477,33 @@ vector<vector<int>> fourSum(vector<int>& nums, int target) {
 
     return res;
 }
+
+
+
+// largest subarray with 0 sum - https://www.geeksforgeeks.org/problems/largest-subarray-with-0-sum/1
+
+int maxLen(vector<int>& arr) {
+    unordered_map<int, int> prefixSumIndex;
+    int maxLength = 0;
+    int prefixSum = 0;
+
+    for (int i = 0; i < arr.size(); ++i) {
+        prefixSum += arr[i];
+
+        // Case 1: subarray from beginning has sum 0
+        if (prefixSum == 0) {
+            maxLength = i + 1;
+        }
+
+        // Case 2: if prefixSum seen before
+        if (prefixSumIndex.find(prefixSum) != prefixSumIndex.end()) {
+            int length = i - prefixSumIndex[prefixSum];
+            maxLength = max(maxLength, length);
+        } else {
+            // Store first occurrence of this prefixSum
+            prefixSumIndex[prefixSum] = i;
+        }
+    }
+
+    return maxLength;
+}
