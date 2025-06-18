@@ -507,3 +507,31 @@ int maxLen(vector<int>& arr) {
 
     return maxLength;
 }
+
+
+
+// count subarrays with given XOR
+
+long subarrayXor(vector<int> &arr, int k) {
+    // code here
+    unordered_map<int, int> freq;
+    int count = 0;
+    int xorSum = 0;
+
+    for (int num : arr) {
+        xorSum ^= num;
+
+        // If prefix XOR itself is equal to k
+        if (xorSum == k) count++;
+
+        // If xorSum ^ k exists in map, add its frequency
+        if (freq.find(xorSum ^ k) != freq.end()) {
+            count += freq[xorSum ^ k];
+        }
+
+        // Store current prefix XOR in map
+        freq[xorSum]++;
+    }
+
+    return count;
+}
