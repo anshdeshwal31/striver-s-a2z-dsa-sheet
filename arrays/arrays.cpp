@@ -535,3 +535,101 @@ long subarrayXor(vector<int> &arr, int k) {
 
     return count;
 }
+
+
+// missing and repeating - https://www.geeksforgeeks.org/problems/find-missing-and-repeating2512/1
+
+//   using maths
+    vector<int> findTwoElement(vector<int>& a) {
+    long long n = a.size(); // size of the array
+
+    // Find Sn and S2n:
+    long long SN = (n * (n + 1)) / 2;
+    long long S2N = (n * (n + 1) * (2 * n + 1)) / 6;
+
+    // Calculate S and S2:
+    long long S = 0, S2 = 0;
+    for (int i = 0; i < n; i++) {
+        S += a[i];
+        S2 += (long long)a[i] * (long long)a[i];
+    }
+
+    //S-Sn = X-Y:
+    long long val1 = S - SN;
+
+    // S2-S2n = X^2-Y^2:
+    long long val2 = S2 - S2N;
+
+    //Find X+Y = (X^2-Y^2)/(X-Y):
+    val2 = val2 / val1;
+
+    //Find X and Y: X = ((X+Y)+(X-Y))/2 and Y = X-(X-Y),
+    // Here, X-Y = val1 and X+Y = val2:
+    long long x = (val1 + val2) / 2;
+    long long y = x - val1;
+
+    return {(int)x, (int)y};
+}
+
+
+
+// count inversions - https://www.geeksforgeeks.org/problems/inversion-of-array-1587115620/1
+
+  int merge(vector<int> &arr, int low, int mid, int high) {
+    vector<int> temp; // temporary array
+    int left = low;      // starting index of left half of arr
+    int right = mid + 1;   // starting index of right half of arr
+
+    //Modification 1: cnt variable to count the pairs:
+    int cnt = 0;
+
+    //storing elements in the temporary array in a sorted manner//
+
+    while (left <= mid && right <= high) {
+        if (arr[left] <= arr[right]) {
+            temp.push_back(arr[left]);
+            left++;
+        }
+        else {
+            temp.push_back(arr[right]);
+            cnt += (mid - left + 1); //Modification 2
+            right++;
+        }
+    }
+
+    // if elements on the left half are still left //
+
+    while (left <= mid) {
+        temp.push_back(arr[left]);
+        left++;
+    }
+
+    //  if elements on the right half are still left //
+    while (right <= high) {
+        temp.push_back(arr[right]);
+        right++;
+    }
+
+    // transfering all elements from temporary to arr //
+    for (int i = low; i <= high; i++) {
+        arr[i] = temp[i - low];
+    }
+
+    return cnt; // Modification 3
+}
+
+int mergeSort(vector<int> &arr, int low, int high) {
+    int cnt = 0;
+    if (low >= high) return cnt;
+    int mid = (low + high) / 2 ;
+    cnt += mergeSort(arr, low, mid);  // left half
+    cnt += mergeSort(arr, mid + 1, high); // right half
+    cnt += merge(arr, low, mid, high);  // merging sorted halves
+    return cnt;
+}
+
+    // Function to count inversions in the array.
+    int inversionCount(vector<int> &arr) {
+        // Your Code Here
+        return mergeSort(arr,0,arr.size()-1);
+    }
