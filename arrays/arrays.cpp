@@ -727,3 +727,45 @@ int reversePairs(vector<int>& nums) {
     }
     return ans;
 }
+
+
+
+// M - coloring problem - https://www.geeksforgeeks.org/problems/m-coloring-problem-1587115620/1
+
+    // Function to check if it is safe to color the current node with color 'col'
+    bool isSafe(int node, vector<int>& color, vector<vector<int>>& edges, int col, int n) {
+    for (auto adjNode : edges[node]) {
+        if (color[adjNode] == col)
+            return false;
+    }
+    return true;
+}
+
+
+    // Backtracking function to try coloring the graph
+    bool solve(int node, vector<int>& color, int m, int n, vector<vector<int>>& edges) {
+        if (node == n) return true;  // all nodes colored successfully
+
+        for (int col = 1; col <= m; col++) {
+            if (isSafe(node, color, edges, col, n)) {
+                color[node] = col;
+                if (solve(node + 1, color, m, n, edges))
+                    return true;
+                color[node] = 0;  // backtrack
+            }
+        }
+        return false;
+    }
+
+    // Main function called by the platform
+    bool graphColoring(int n, vector<vector<int>>& edges, int m) {
+    // Convert edge list to adjacency list
+    vector<vector<int>> adj(n);
+    for (auto& edge : edges) {
+        adj[edge[0]].push_back(edge[1]);
+        adj[edge[1]].push_back(edge[0]);
+    }
+
+    vector<int> color(n, 0);
+    return solve(0, color, m, n, adj);
+}
