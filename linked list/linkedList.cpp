@@ -396,3 +396,39 @@ ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
         solve(temp2 , temp1, carry);
     }
 }
+
+
+
+// delete all the occurences of a key in DLL - https://www.geeksforgeeks.org/problems/delete-all-occurrences-of-a-given-key-in-a-doubly-linked-list/1
+
+    void deleteAllOccurOfX(struct Node** head_ref, int x) {
+        Node* curr = *head_ref;
+
+        while (curr != NULL) {
+            // If current node contains x
+            if (curr->data == x) {
+                // If current node is head
+                if (curr == *head_ref) {
+                    *head_ref = curr->next;
+                    if (*head_ref != NULL) {
+                        (*head_ref)->prev = NULL;
+                    }
+                    delete curr;
+                    curr = *head_ref;
+                }
+                // If current node is not head
+                else {
+                    Node* nextNode = curr->next;
+                    curr->prev->next = curr->next;
+                    if (curr->next != NULL) {
+                        curr->next->prev = curr->prev;
+                    }
+                    delete curr;
+                    curr = nextNode;
+                }
+            }
+            else {
+                curr = curr->next;
+            }
+        }
+    }
