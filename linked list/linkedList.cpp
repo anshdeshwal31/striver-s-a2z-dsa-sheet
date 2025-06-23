@@ -440,3 +440,46 @@ ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
 
 
 // Remove duplicates from a sorted DLL - https://www.geeksforgeeks.org/problems/remove-duplicates-from-a-sorted-doubly-linked-list/1
+
+
+
+
+// LC 25 - reverse nodes in k-group
+
+// using recursion
+class Solution {
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        if (!head || k == 1) return head;
+
+        // Check if there are at least k nodes remaining
+        ListNode* temp = head;
+        int count = 0;
+        while (temp && count < k) {
+            temp = temp->next;
+            count++;
+        }
+
+        if (count < k) return head;  // not enough nodes, leave as-is
+
+        // Reverse k nodes
+        ListNode* prev = nullptr;
+        ListNode* curr = head;
+        ListNode* next = nullptr;
+        count = 0;
+
+        while (curr && count < k) {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+            count++;
+        }
+
+        // Recursively reverse the next part of the list
+        if (next)
+            head->next = reverseKGroup(next, k);
+
+        return prev;  // new head after reversing this group
+    }
+};
