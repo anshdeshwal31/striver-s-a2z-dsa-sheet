@@ -483,3 +483,42 @@ public:
         return prev;  // new head after reversing this group
     }
 };
+
+
+
+// LC 61 - rotate list
+
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if (!head || !head->next || k == 0)
+            return head;
+
+        // Compute the length of the list
+        int length = 1;
+        ListNode* tail = head;
+        while (tail->next) {
+            tail = tail->next;
+            length++;
+        }
+
+        // Make the list circular
+        tail->next = head;
+
+        // Effective rotations needed
+        k = k % length;
+        int stepsToNewHead = length - k;
+
+        // Move to new head position
+        ListNode* newTail = tail;
+        while (stepsToNewHead--) {
+            newTail = newTail->next;
+        }
+
+        // Break the loop and assign new head
+        ListNode* newHead = newTail->next;
+        newTail->next = nullptr;
+
+        return newHead;
+    }
+};
