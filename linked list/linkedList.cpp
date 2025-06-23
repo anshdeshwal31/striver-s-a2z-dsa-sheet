@@ -436,3 +436,7 @@ ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
 
 
 // find pairs with given sum in a DLL - https://www.geeksforgeeks.org/problems/find-pairs-with-given-sum-in-doubly-linked-list/1
+
+
+
+// Remove duplicates from a sorted DLL - https://www.geeksforgeeks.org/problems/remove-duplicates-from-a-sorted-doubly-linked-list/1
