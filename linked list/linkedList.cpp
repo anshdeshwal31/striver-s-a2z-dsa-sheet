@@ -586,3 +586,88 @@ Node* flatten(Node* head){
     head = merge(head, mergedHead);
     return head;
 }
+
+
+
+// LC 138 - Copy List with Random Pointer
+
+// using map - O(N) S.C.
+ 
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        if(!head) return nullptr;
+
+        Node* curr = head;
+        Node* temp = new Node(curr->val);
+        Node* newHead = temp;
+        
+        while(curr && curr->next){
+            temp->next = new Node(curr->next->val);
+            temp = temp->next;
+            curr = curr->next;
+        }
+        
+        curr = head;
+        temp = newHead;
+        unordered_map<Node* , Node*> mp;
+        
+        while(temp && curr){
+            mp[curr] = temp;
+            temp = temp->next;
+            curr = curr->next;
+        }
+
+        curr = head;
+        temp = newHead;
+
+        while(temp&& curr){
+            temp->random = mp[curr->random];
+            temp  = temp->next;
+            curr = curr->next;
+        }
+
+        return newHead;
+    }
+};
+
+
+
+// without map - O(1) S.C.
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        if (!head) return NULL;
+
+        // Step 1: Make copy of each node and link them side-by-side
+        Node* curr = head;
+        while (curr) {
+            Node* temp = new Node(curr->val);
+            temp->next = curr->next;
+            curr->next = temp;
+            curr = temp->next;
+        }
+
+        // Step 2: Assign random pointers to the copied nodes
+        curr = head;
+        while (curr) {
+            if (curr->random)
+                curr->next->random = curr->random->next;
+            curr = curr->next->next;
+        }
+
+        // Step 3: Restore the original list, and extract the copied list
+        curr = head;
+        Node* copyHead = head->next;
+        Node* copy = copyHead;
+        while (curr) {
+            curr->next = curr->next->next;
+            if (copy->next)
+                copy->next = copy->next->next;
+            curr = curr->next;
+            copy = copy->next;
+        }
+
+        return copyHead;
+    }
+};
