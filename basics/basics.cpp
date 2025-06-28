@@ -33,3 +33,6 @@ int findGcd(int a, int b) {
     return a;
 }
 
+
+
+// check armstrong number - https://www.geeksforgeeks.org/problems/armstrong-numbers2727/1
