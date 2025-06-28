@@ -14,3 +14,22 @@ using namespace std;
 
 
 // count digits - https://www.geeksforgeeks.org/dsa/program-count-digits-integer-3-different-methods/
+
+
+// GCD of two numbers - https://www.geeksforgeeks.org/problems/gcd-of-two-numbers3459/1
+
+int findGcd(int a, int b) {
+    while(a > 0 && b > 0) {
+        if(a > b) {
+            a = a % b;
+        }
+        else {
+            b = b % a; 
+        }
+    }
+    if(a == 0) {
+        return b;
+    }
+    return a;
+}
+
