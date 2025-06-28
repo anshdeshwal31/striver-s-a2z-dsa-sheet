@@ -36,3 +36,21 @@ int findGcd(int a, int b) {
 
 
 // check armstrong number - https://www.geeksforgeeks.org/problems/armstrong-numbers2727/1
+
+
+
+// print all divisors - https://www.geeksforgeeks.org/problems/all-divisors-of-a-number/1
+
+
+void print_divisors(int n) {
+    vector<int> small, large;
+    for (int i = 1; i <= sqrt(n); i++) {
+        if (n % i == 0) {
+            small.push_back(i);
+            if (i != n / i) large.push_back(n / i);
+        }
+    }
+    for (int d : small) cout << d << " ";
+    for (int i = large.size() - 1; i >= 0; i--) cout << large[i] << " ";
+    cout << endl;
+}
