@@ -207,3 +207,79 @@ vector<int> asteroidCollision(vector<int>& asteroids) {
     }
     return result;
 }
+
+
+
+
+// LC 2104 - sum of subarray ranges 
+
+ long long subArrayRanges(vector<int>& nums) {
+        
+    int n = nums.size();
+    vector<int > prevLess(n);
+    vector<int > nextLess(n);
+    vector<int > prevMore(n);
+    vector<int > nextMore(n);
+
+    stack<int>st;
+
+    // finding previous smaller element
+    // maintaining a increasing monotonic stack
+    for(int i = 0 ; i < n ; i++){
+        while(!st.empty() && nums[st.top()]>nums[i]) st.pop();
+        
+        if(st.empty()) prevLess[i] = -1;
+        else prevLess[i]=st.top();
+        st.push(i);
+    }
+    
+    while (!st.empty()) {
+        st.pop();
+    }
+    
+    // finding next smaller element 
+    // maintaining a increasing monotonic stack
+    for(int i = n-1; i>=0; i--){
+        while(!st.empty() && nums[st.top()]>=nums[i]) st.pop();
+        
+        if(st.empty()) nextLess[i] = n;
+        else nextLess[i]=st.top();
+        st.push(i);
+    }
+    
+    while (!st.empty()) {
+        st.pop();
+    }
+    
+    // finding previous greater element
+    // maintaining a decreasing monotonic stack
+    for(int i = 0 ; i < n ; i++){
+        while(!st.empty() && nums[st.top()]<nums[i]) st.pop();
+        
+        if(st.empty()) prevMore[i] = -1;
+        else prevMore[i]=st.top();
+        st.push(i);
+    }
+    
+    while (!st.empty()) {
+        st.pop();
+    }
+    
+    // finding next greater element
+    // maintaining a decreasing monotonic stack
+    for(int i = n-1; i>=0; i--){
+        while(!st.empty() && nums[st.top()]<=nums[i]) st.pop();
+
+        if(st.empty()) nextMore[i] = n;
+        else nextMore[i]=st.top();
+        st.push(i);
+    }
+
+    long long ans = 0;
+for (int i = 0; i < n; i++) {
+    ans += 1LL * (nextMore[i] - i) * (i - prevMore[i]) * nums[i];
+    ans -= 1LL * (nextLess[i] - i) * (i - prevLess[i]) * nums[i];
+}
+
+    return ans;
+}
