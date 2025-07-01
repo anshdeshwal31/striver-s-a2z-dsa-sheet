@@ -136,3 +136,43 @@ vector<int> prevSmaller(vector<int> &A) {
     }
     return ans;
 }
+
+
+
+// LC 907 - sum of subarray minimums
+
+ int sumSubarrayMins(vector<int>& arr) {
+    int n = arr.size();
+    const int MOD = 1e9 + 7;
+    stack<int> st;
+    vector<int> ple(n), nle(n);  // Previous Less Element, Next Less Element
+
+    // Find Previous Less Element (PLE)
+    for (int i = 0; i < n; ++i) {
+        while (!st.empty() && arr[st.top()] > arr[i])
+            st.pop();
+        ple[i] = st.empty() ? -1 : st.top();
+        st.push(i);
+    }
+
+    // Clear stack to reuse it
+    while (!st.empty()) st.pop();
+
+    // Find Next Less Element (NLE)
+    for (int i = n - 1; i >= 0; --i) {
+        while (!st.empty() && arr[st.top()] >= arr[i])
+            st.pop();
+        nle[i] = st.empty() ? n : st.top();
+        st.push(i);
+    }
+
+    // Calculate total contribution of each element
+    long long ans = 0;
+    for (int i = 0; i < n; ++i) {
+        long long left = i - ple[i];
+        long long right = nle[i] - i;
+        ans = (ans + (arr[i] * left % MOD) * right % MOD) % MOD;
+    }
+
+    return ans;
+}
