@@ -176,3 +176,34 @@ vector<int> prevSmaller(vector<int> &A) {
 
     return ans;
 }
+
+
+
+// LC 735 - asteroid collision
+
+vector<int> asteroidCollision(vector<int>& asteroids) {
+    stack<int> st;
+    for (int ast : asteroids) {
+        bool destroyed = false;
+        while (!st.empty() && st.top() > 0 && ast < 0) {
+            if (abs(st.top()) < abs(ast)) {
+                st.pop();  // Top asteroid destroyed
+            } else if (abs(st.top()) == abs(ast)) {
+                st.pop();  // Both destroyed
+                destroyed = true;
+                break;
+            } else {
+                destroyed = true;  // Current asteroid destroyed
+                break;
+            }
+        }
+        if (!destroyed) st.push(ast);
+    }
+
+    vector<int> result(st.size());
+    for (int i = st.size() - 1; i >= 0; --i) {
+        result[i] = st.top();
+        st.pop();
+    }
+    return result;
+}
