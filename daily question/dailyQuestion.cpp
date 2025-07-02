@@ -110,3 +110,36 @@ int possibleStringCount(string word) {
     }
     return count + 1;
 }
+
+
+
+// 2099. Find Subsequence of Length K With the Largest Sum
+
+vector<int> maxSubsequence(vector<int>& nums, int k) {
+    int n = nums.size();
+    vector<pair<int, int>> indexed;
+
+    // Pair each value with its index
+    for (int i = 0; i < n; ++i) {
+        indexed.push_back({nums[i], i});
+    }
+
+    // Sort descending by value
+    sort(indexed.rbegin(), indexed.rend());
+
+    // Pick top k elements (with indices)
+    vector<pair<int, int>> selected(indexed.begin(), indexed.begin() + k);
+
+    // Sort selected elements by original index to preserve order
+    sort(selected.begin(), selected.end(), [](auto& a, auto& b) {
+        return a.second < b.second;
+    });
+
+    // Extract values
+    vector<int> result;
+    for (auto& p : selected) {
+        result.push_back(p.first);
+    }
+
+    return result;
+}
