@@ -163,4 +163,24 @@ int numSubarraysWithSum(vector<int>& nums, int goal) {
 }
 
 
-// how can we use const with a state since it will change at some point of time
+
+// LC - 3. Longest Substring Without Repeating Characters
+
+int lengthOfLongestSubstring(string s) {
+    set<char> st;
+    int n = s.size();
+    int left = 0;
+    int ans = 0;
+
+    for (int right = 0; right < n; ++right) {
+        // If s[right] already in set, shrink window from left until it's removed
+        while (st.find(s[right]) != st.end()) {
+            st.erase(s[left]);
+            ++left;
+        }
+
+        st.insert(s[right]);
+        ans = max(ans, right - left + 1);
+    }
+    return ans;
+}
