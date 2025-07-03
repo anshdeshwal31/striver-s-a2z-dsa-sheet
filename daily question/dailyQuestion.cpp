@@ -143,3 +143,33 @@ vector<int> maxSubsequence(vector<int>& nums, int k) {
 
     return result;
 }
+
+
+
+// 1498. Number of Subsequences That Satisfy the Given Sum Condition
+
+int numSubseq(vector<int>& nums, int target) {
+    int mod = 1e9 + 7;
+    int n = nums.size();
+    sort(nums.begin(), nums.end());
+
+    // Precompute powers of 2 modulo mod
+    vector<int> pow2(n+1, 1);
+    for (int i = 1; i <= n; ++i)
+        pow2[i] = (pow2[i-1] * 2) % mod;
+
+    int ans = 0;
+    int left = 0, right = n-1;
+
+    while (left <= right) {
+        if (nums[left] + nums[right] <= target) {
+            // Number of possible subsequences formed by choosing any subset of (right-left) middle elements
+            ans = (ans + pow2[right - left]) % mod;
+            ++left;
+        } else {
+            --right;
+        }
+    }
+
+    return ans;
+}
