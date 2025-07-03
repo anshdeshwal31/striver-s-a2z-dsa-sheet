@@ -256,3 +256,25 @@ int characterReplacement(string s, int k) {
 
         return ans;
     }
+
+
+
+// LC - 930. Binary Subarrays With Sum
+
+int numSubarraysWithSum(vector<int>& nums, int goal) {
+    unordered_map<int, int> mp;
+    mp[0] = 1; // prefix sum 0 appears once initially
+    int sum = 0;
+    int count = 0;
+
+    for (int right = 0; right < nums.size(); right++) {
+        sum += nums[right];
+
+        if (mp.count(sum - goal))
+            count += mp[sum - goal];
+
+        mp[sum]++;
+    }
+
+    return count;
+}
