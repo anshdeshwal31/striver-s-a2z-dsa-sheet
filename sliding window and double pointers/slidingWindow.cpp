@@ -184,3 +184,23 @@ int lengthOfLongestSubstring(string s) {
     }
     return ans;
 }
+
+
+
+// LC- 1004. Max Consecutive Ones III
+
+int longestOnes(vector<int>& nums, int k) {
+        
+    int right = 0;
+    int left = 0;
+    int ans = 0;
+    for(int right = 0; right<nums.size();right++){
+        while(nums[right]==0 && k<=0){
+            if(nums[left]==0)k++;
+            left++;
+        }
+
+        if(nums[right]==0)k--;
+        ans = max(ans , right - left +1);
+    }
+}
