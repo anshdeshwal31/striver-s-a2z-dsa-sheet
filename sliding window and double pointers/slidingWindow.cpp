@@ -278,3 +278,47 @@ int numSubarraysWithSum(vector<int>& nums, int goal) {
 
     return count;
 }
+
+
+
+// LC - 1248. Count Number of Nice Subarrays
+
+    // using prefix sum
+    int numberOfSubarrays(vector<int>& nums, int k) {
+        unordered_map<int, int> countMap;
+        countMap[0] = 1; // base case
+        int oddCount = 0, result = 0;
+
+        for (int num : nums) {
+            if (num % 2 != 0) oddCount++;
+
+            if (countMap.count(oddCount - k))
+                result += countMap[oddCount - k];
+
+            countMap[oddCount]++;
+        }
+
+        return result;
+    }
+
+
+    // using two-pointers and sliding window
+
+    int atMost(vector<int>& nums, int k) {
+        int left = 0, res = 0;
+        for (int right = 0; right < nums.size(); ++right) {
+            if (nums[right] % 2 != 0) k--;
+
+            while (k < 0) {
+                if (nums[left] % 2 != 0) k++;
+                left++;
+            }
+
+            res += right - left + 1;
+        }
+        return res;
+    }
+
+    int numberOfSubarrays(vector<int>& nums, int k) {
+        return atMost(nums, k) - atMost(nums, k - 1);
+    }
