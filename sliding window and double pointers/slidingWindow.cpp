@@ -230,3 +230,29 @@ int longestOnes(vector<int>& nums, int k) {
 
         return maxFruits;
     }
+
+
+
+
+// LC - 424. Longest Repeating Character Replacement
+
+int characterReplacement(string s, int k) {
+        int n = s.size();
+        int left = 0, maxCount = 0, ans = 0;
+        vector<int> count(26, 0);
+
+        for (int right = 0; right < n; ++right) {
+            count[s[right] - 'A']++;
+            maxCount = max(maxCount, count[s[right] - 'A']);
+
+            // If window has more than k chars to replace, shrink from left
+            while (right - left + 1 - maxCount > k) {
+                count[s[left] - 'A']--;
+                ++left;
+            }
+
+            ans = max(ans, right - left + 1);
+        }
+
+        return ans;
+    }
