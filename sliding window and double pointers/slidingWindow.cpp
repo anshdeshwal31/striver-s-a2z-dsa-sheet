@@ -322,3 +322,27 @@ int numSubarraysWithSum(vector<int>& nums, int goal) {
     int numberOfSubarrays(vector<int>& nums, int k) {
         return atMost(nums, k) - atMost(nums, k - 1);
     }
+
+
+    
+// LC - 1358. Number of Substrings Containing All Three Characters
+
+int numberOfSubstrings(string s) {
+        int n = s.size();
+        int count = 0;
+        int left = 0;
+        unordered_map<char, int> freq;
+
+        for (int right = 0; right < n; ++right) {
+            freq[s[right]]++;
+
+            // When all three characters are present in the window
+            while (freq['a'] > 0 && freq['b'] > 0 && freq['c'] > 0) {
+                // Add all substrings starting from left to n-1
+                count += n - right;
+                freq[s[left]]--;
+                left++;
+            }
+        }
+        return count;
+    }
