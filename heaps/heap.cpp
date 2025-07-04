@@ -128,19 +128,54 @@ ListNode* mergeKLists(vector<ListNode*>& lists) {
 
 
 
-// LC 846 
-bool isNStraightHand(vector<int>& hand, int groupSize) {
-    priority_queue<greater<int>, vector<int>> pq;
-    for(int& card:hand) pq.push(card);
+// LC - 355. Design Twitter
 
-    while(!pq.empty()){
-        int top = -1;
-        int count = groupSize;
-        while(count--){
-            if(top == -1 && )
-        }
-        
+class Twitter {
+    int time;
+    unordered_map<int, unordered_set<int>> followees;
+    unordered_map<int, vector<pair<int, int>>> tweets;
+
+public:
+    Twitter() {
+        time = 0;
     }
-}
 
+    void postTweet(int userId, int tweetId) {
+        tweets[userId].push_back({time++, tweetId});
+    }
 
+    vector<int> getNewsFeed(int userId) {
+        priority_queue<pair<int, int>> pq;  // max-heap on time
+
+        // Add user's own tweets
+        for (auto &t : tweets[userId]) {
+            pq.push(t);
+        }
+
+        // Add tweets of followees
+        for (auto &f : followees[userId]) {
+            for (auto &t : tweets[f]) {
+                pq.push(t);
+            }
+        }
+
+        // Get top 10 recent tweets
+        vector<int> res;
+        int cnt = 0;
+        while (!pq.empty() && cnt < 10) {
+            res.push_back(pq.top().second);
+            pq.pop();
+            cnt++;
+        }
+        return res;
+    }
+
+    void follow(int followerId, int followeeId) {
+        if (followerId == followeeId) return;
+        followees[followerId].insert(followeeId);
+    }
+
+    void unfollow(int followerId, int followeeId) {
+        followees[followerId].erase(followeeId);
+    }
+};
