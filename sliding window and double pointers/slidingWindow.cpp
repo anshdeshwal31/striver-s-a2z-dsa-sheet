@@ -346,3 +346,27 @@ int numberOfSubstrings(string s) {
         }
         return count;
     }
+
+
+
+    
+    // LC - 1423. Maximum Points You Can Obtain from Cards 
+
+    int maxScore(vector<int>& cardPoints, int k) {
+
+        int right = 0;
+        int n = cardPoints.size();
+        if(k==n) return accumulate(cardPoints.begin(),cardPoints.end(),0);
+        int minSum= INT_MAX;
+        int sum = 0;
+        int left = 0;
+        
+        for(right =0 ; right < n; right ++){
+            sum+=cardPoints[right];
+            if(right>=n-k-1){
+                minSum = min(sum , minSum);
+                sum-=cardPoints[left++];
+            }
+        }
+        return accumulate(cardPoints.begin(),cardPoints.end(),0) - minSum;
+    }
