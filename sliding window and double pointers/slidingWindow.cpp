@@ -384,14 +384,15 @@ int kDistinctChars(int k, string &str){
     int ans = 0;
 
     for(int right = 0 ; right<n; right++){
-        mp[right]++;
+        mp[str[right]]++;
         while(mp.size()>k){
             mp[str[left]]--;
-            if(mp[left]==0) mp.erase(str[left]);
+            if(mp[str[left]]==0) mp.erase(str[left]);
             left++;
         }
-
         ans = max(ans,right-left+1);
+        // cout<<ans<<" "<<endl;
     }
     return ans;
 }
+
