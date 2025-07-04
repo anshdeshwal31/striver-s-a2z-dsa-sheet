@@ -349,7 +349,7 @@ int numberOfSubstrings(string s) {
 
 
 
-    
+
     // LC - 1423. Maximum Points You Can Obtain from Cards 
 
     int maxScore(vector<int>& cardPoints, int k) {
@@ -370,3 +370,28 @@ int numberOfSubstrings(string s) {
         }
         return accumulate(cardPoints.begin(),cardPoints.end(),0) - minSum;
     }
+
+
+    
+    
+    //  Longest Substring with At Most K Distinct Characters - https://www.naukri.com/code360/problems/distinct-characters_2221410
+
+int kDistinctChars(int k, string &str){
+    int n  = str.size();
+    int left = 0; 
+    int right = 0;
+    unordered_map<char,int>mp;
+    int ans = 0;
+
+    for(int right = 0 ; right<n; right++){
+        mp[right]++;
+        while(mp.size()>k){
+            mp[str[left]]--;
+            if(mp[left]==0) mp.erase(str[left]);
+            left++;
+        }
+
+        ans = max(ans,right-left+1);
+    }
+    return ans;
+}
