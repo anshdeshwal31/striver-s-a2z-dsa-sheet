@@ -187,3 +187,180 @@ public:
 
 
 // LC - 703. Kth Largest Element in a Stream
+
+
+
+int solve(int i , int j , int time , vector<vector<int>>& waitCost ,int m , int n, vector<vector<vector<int>>>&dp ){
+    if(i==m-1 && j ==n-1) return m*n;
+    if(i>=m)return INT_MAX;
+    if(j>=n) return INT_MAX;
+    if(dp[i][j][time]!=-1)return dp[i][j][time];
+
+
+    if(time%2==0){
+        return dp[i][j][time] = waitCost[i][j] + solve(i,j,time+1,waitCost ,  m ,  n,dp);
+    }
+
+    int moveDown = solve(i+1,j,time+1,waitCost,m,n,dp);
+    int moveRight = solve(i,j+1,time+1,waitCost,m,n,dp);
+
+    return dp[i][j][time] =  min(moveDown,moveRight)+ (i+1)*(j+1);
+}
+
+    long long minCost(int m, int n, vector<vector<int>>& waitCost) {
+        vector<vector<vector<int>>>dp(m,vector<vector<int>>(n,vector<int>(2*m*n+1,-1)));
+        return solve(0,0,1,waitCost , m,n,dp);
+    }
+    
+    
+    
+    int solveTab ( vector<vector<int>>&waitCost , int m , int n){
+        vector<vector<vector<int>>>dp(m,vector<vector<int>>(n,vector<int>(2*m*n+1,-1)));
+        
+        for(int i = 0 ; i < 2*m*n+1; i++){
+            dp[m-1][n-1][i] = m*n;
+        }
+        
+        for(int i = m-1; i >= 0 ; i--){
+            for(int j = n-1 ; j>=0; j--){
+                for(int time = 2*m*n-1 ; time>=0 ; time--){
+                    if(time%2==0){
+                        dp[i][j][time] = waitCost[i][j] + dp[i][j][time+1];
+                    }
+                    
+                    int moveDown = dp[i+1][j][time+1];
+                    int moveRight = dp[i][j+1][time+1];
+                    
+                    dp[i][j][time] =  min(moveDown,moveRight)+ (i+1)*(j+1);
+                }   
+            }
+        }
+        return dp[0][0][1];
+    }
+    
+    long long minCost(int m, int n, vector<vector<int>>& waitCost) {
+        return solveTab(waitCost ,m ,n);
+    }
+
+
+    int dfs(int i , int time ,vector<int>&visited , unordered_map<int , vector<vector<int>>>&adjList){
+        int mini = INT_MAX;
+        visited[i]=true;
+        for(auto& neigh: adjList[i] ){
+            if(!visited[neigh[0]]){
+                int tempTime;
+                if(time>=neigh[2] && time <=neigh[3]){
+                    tempTime = time+1;
+                }
+                else if(time<neigh[2]){
+                    tempTime = neigh[2]+1;
+                }
+                else{
+                    continue;
+                }
+                int recursiveCall = dfs(neigh[0],tempTime , visited,adjList);
+                mini = min(mini ,recursiveCall);
+            }
+        }
+        return mini;
+    }
+
+    int minTime(int n, vector<vector<int>>& edges) {
+        unordered_map<int , vector<vector<int>>> adjList;
+
+        for(auto &i: edges){
+            adjList[i[0]].push_back({i[1],i[2],i[3]});  // neighbouring node , start time , end time 
+        }
+
+        vector<int>visited(n,0);
+        return dfs(0,0,visited , adjList);
+    }
+
+
+    #include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int dfs(int i , int time ,vector<int>&visited , unordered_map<int , vector<vector<int>>>&adjList){
+        int mini = INT_MAX;
+        visited[i]=true;
+        for(auto& neigh: adjList[i] ){
+            if(!visited[neigh[0]]){
+                int tempTime;
+                if(time>=neigh[2] && time <=neigh[3]){
+                    tempTime = time+1;
+                }
+                else if(time<neigh[2]){
+                    tempTime = neigh[2]+1;
+                }
+                else{
+                    continue;
+                }
+                int recursiveCall = dfs(neigh[0],tempTime , visited,adjList);
+                mini = min(mini ,recursiveCall);
+            }
+        }
+        return mini;
+    }
+
+    int minTime(int n, vector<vector<int>>& edges) {
+        unordered_map<int , vector<vector<int>>> adjList;
+
+        for(auto &i: edges){
+            adjList[i[0]].push_back({i[1],i[2],i[3]});  // neighbouring node , start time , end time 
+            // cout<<" "<< adjList[i[0]][0][0]<< " "<<adjList[i[0]][0][1]<<" " << adjList[i[0]][0][2]<<" ";
+        }
+        
+        vector<int>visited(n,0);
+        return dfs(0,0,visited , adjList);
+    }
+};
+
+
+
+// Maximum Sum Combination- https://www.geeksforgeeks.org/problems/maximum-sum-combination/1
+
+vector<int> topKSumPairs(vector<int>& a, vector<int>& b, int k) {
+    int n = a.size();
+
+    // Sort both arrays in descending order
+    sort(a.rbegin(), a.rend());
+    sort(b.rbegin(), b.rend());
+
+    // Max-heap: pair<sum, pair<index in a, index in b>>
+    priority_queue<pair<int, pair<int, int>>> maxHeap;
+
+    // Set to keep track of visited index pairs
+    set<pair<int, int>> visited;
+
+    // Initial pair (0, 0)
+    maxHeap.push({a[0] + b[0], {0, 0}});
+    visited.insert({0, 0});
+
+    vector<int> result;
+
+    while (k-- && !maxHeap.empty()) {
+        auto top = maxHeap.top();
+        maxHeap.pop();
+
+        int sum = top.first;
+        int i = top.second.first;
+        int j = top.second.second;
+
+        result.push_back(sum);
+
+        // Next pair: (i+1, j)
+        if (i + 1 < n && visited.find({i + 1, j}) == visited.end()) {
+            maxHeap.push({a[i + 1] + b[j], {i + 1, j}});
+            visited.insert({i + 1, j});
+        }
+
+        // Next pair: (i, j+1)
+        if (j + 1 < n && visited.find({i, j + 1}) == visited.end()) {
+            maxHeap.push({a[i] + b[j + 1], {i, j + 1}});
+            visited.insert({i, j + 1});
+        }
+    }
+
+    return result;
+}
