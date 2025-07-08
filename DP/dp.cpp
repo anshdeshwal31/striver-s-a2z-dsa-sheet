@@ -2907,3 +2907,60 @@ int solve(int i, int j, string& s, vector<vector<int>>& dp) {
         return solve(0, n-1, s, dp);
 }
 
+
+
+
+// LC - 72. Edit Distance
+
+// using recursion 
+
+int solve(int i ,int j , string word1 , string word2 ){
+    if(i==word1.size()) return word2.size()-j;
+    if(j == word2.size()) return word1.size()-i;
+    
+    
+    if(word1[i]==word2[j]) return solve(i+1,j+1,word1 , word2);
+
+    int insert  = 1 + solve(i , j+1 , word1 , word2);
+    int deleteChar = 1+ solve(i+1 ,j , word1 , word2);
+    int replace = 1+solve(i+1 , j+1 , word1 , word2);
+
+    return min({insert , deleteChar , replace});
+}
+int minDistance(string word1, string word2) {
+    return solve(0 , 0 , word1 , word2);
+}
+
+
+// using tabulation 
+
+    int minDistance(string word1, string word2) {
+        int m = word1.size();
+        int n = word2.size();
+
+        vector<vector<int>> dp(m+1, vector<int>(n+1, 0));
+
+        // Base cases:
+        // When word1 is exhausted, insert remaining word2 characters
+        for (int j = 0; j <= n; ++j) dp[m][j] = n - j;
+
+        // When word2 is exhausted, delete remaining word1 characters
+        for (int i = 0; i <= m; ++i) dp[i][n] = m - i;
+
+        // Fill DP table from bottom-right to top-left
+        for (int i = m-1; i >= 0; --i) {
+            for (int j = n-1; j >= 0; --j) {
+                if (word1[i] == word2[j]) {
+                    dp[i][j] = dp[i+1][j+1]; // no operation
+                } else {
+                    int insertOp  = 1 + dp[i][j+1];
+                    int deleteOp  = 1 + dp[i+1][j];
+                    int replaceOp = 1 + dp[i+1][j+1];
+
+                    dp[i][j] = min({insertOp, deleteOp, replaceOp});
+                }
+            }
+        }
+
+        return dp[0][0];
+    }
