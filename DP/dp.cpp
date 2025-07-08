@@ -3238,3 +3238,55 @@ int maxProfit(vector<int>& prices) {
 
     return dp[0][1];
 }
+
+
+
+// LC - 714. Best Time to Buy and Sell Stock with Transaction Fee
+
+// using recursion 
+    int solve(int i, bool canBuy, vector<int>& prices, int fee) {
+    if (i >= prices.size()) return 0;
+
+    int profit = 0;
+
+    if (canBuy) {
+        // Either buy today or skip
+        int buy = -prices[i] + solve(i + 1, false, prices, fee);
+        int skip = solve(i + 1, true, prices, fee);
+        profit = max(buy, skip);
+    } else {
+        // Either sell today (pay fee) or skip
+        int sell = prices[i] - fee + solve(i + 1, true, prices, fee);
+        int skip = solve(i + 1, false, prices, fee);
+        profit = max(sell, skip);
+    }
+
+    return profit;
+}
+
+int maxProfit(vector<int>& prices, int fee) {
+    return solve(0, true, prices, fee);
+}
+
+// using tabulation 
+
+int maxProfit(vector<int>& prices, int fee) {
+    int n = prices.size();
+    vector<vector<int>> dp(n + 1, vector<int>(2, 0));
+
+    for (int i = n - 1; i >= 0; --i) {
+        // If can buy today
+        dp[i][1] = max(
+            -prices[i] + dp[i + 1][0],  // Buy
+            dp[i + 1][1]                // Skip
+        );
+
+        // If holding a stock (can sell)
+        dp[i][0] = max(
+            prices[i] - fee + dp[i + 1][1], // Sell (pay fee)
+            dp[i + 1][0]                    // Skip
+        );
+    }
+
+    return dp[0][1];  // starting from day 0 with canBuy=true
+}
