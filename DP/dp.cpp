@@ -2966,7 +2966,7 @@ int minDistance(string word1, string word2) {
     }
 
 
-    
+
 
     // LC - 44. Wildcard Matching
 
@@ -3032,3 +3032,43 @@ int minDistance(string word1, string word2) {
 
         return dp[0][0];
     }
+
+
+
+// LC - 121. Best Time to Buy and Sell Stock
+
+// without recursion 
+ 
+int maxProfit(vector<int>& prices) {
+    int minPrice = INT_MAX;
+    int maxProfit = 0;
+    
+    for(int price : prices) {
+        minPrice = min(minPrice, price);
+        maxProfit = max(maxProfit, price - minPrice);
+    }
+    return maxProfit;
+}
+
+
+// using recursion 
+
+int solve(int index, bool canBuy, vector<int>& prices) {
+    // Base case
+    if(index >= prices.size()) return 0;
+    
+    int doNothing = solve(index + 1, canBuy, prices);
+    int doSomething = 0;
+    
+    if(canBuy) {
+        doSomething = -prices[index] + solve(index + 1, false, prices);
+    } else {
+        doSomething = prices[index];
+    }
+    
+    return max(doNothing, doSomething);
+}
+int maxProfit(vector<int>& prices) {
+    return solve (0,true , prices);
+}
+
