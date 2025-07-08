@@ -3072,3 +3072,121 @@ int maxProfit(vector<int>& prices) {
     return solve (0,true , prices);
 }
 
+
+
+
+// LC - 123. Best Time to Buy and Sell Stock III
+
+    // usign recursioon
+int solve(int index , bool canBuy , vector<int> & prices,int k){
+    if(index >= prices.size() || k==0) return 0;
+
+    // do nothing 
+    int profitWhenDidNothing = solve(index+1,canBuy,prices,k);
+
+    int profitWhenDidSomething = 0;
+
+    // when you are not holding any stock and buying a stock 
+    if(canBuy){
+        profitWhenDidSomething -= prices[index];
+        profitWhenDidSomething += solve(index+1,false,prices,k);
+    }
+    // when you are holding a stock  and selling that stock
+    else{
+        // k--;
+        profitWhenDidSomething += prices[index];
+        profitWhenDidSomething += solve(index+1,true,prices,k-1);
+        // k++;
+    }
+
+    return max(profitWhenDidNothing,profitWhenDidSomething);
+}
+int maxProfit(vector<int>& prices) {
+    int k = 2;
+    return solve(0,true,prices,k);
+}
+
+
+int solveTab(vector<int>& prices){
+    int k = 2;
+    int n = prices.size();
+    vector<vector<vector<int>>>dp(n+1,vector<vector<int>>(2,vector<int>(k+1,0)));
+    
+    for(int i = n-1; i>=0; i--){
+        for(int j = 0; j<=1; j++){
+            for(int l = 1; l<=k;l++){
+                // do nothing 
+                int profitWhenDidNothing = dp[i+1][j][l];
+                
+                int profitWhenDidSomething = 0;
+                
+                // when you are not holding any stock and buying a stock 
+                if(j){
+                    profitWhenDidSomething -= prices[i];
+                    profitWhenDidSomething += dp[i+1][0][l];
+                }
+                // when you are holding a stock  and selling that stock
+                else{
+                    // k--;
+                    profitWhenDidSomething += prices[i];
+                    profitWhenDidSomething += dp[i+1][1][l-1];
+                    // k++;
+                }
+                
+                dp[i][j][l] = max(profitWhenDidNothing,profitWhenDidSomething);
+                
+            }
+        }
+    }
+
+    return dp[0][1][k];
+}
+
+int maxProfit(vector<int>& prices){
+    return solveTab(prices);
+}
+
+
+// tabulation using space optimization 
+
+int solveOptimal(vector<int>& prices){
+    int k = 2;
+    int n = prices.size();
+    vector<vector<vector<int>>>dp(n+1,vector<vector<int>>(2,vector<int>(k+1,0)));
+    vector<vector<int>>next(2,vector<int>(k+1,0));
+    vector<vector<int>>curr(2,vector<int>(k+1,0));
+    
+    for(int i = n-1; i>=0; i--){
+        for(int j = 0; j<=1; j++){
+            for(int l = 1; l<=k;l++){
+                // do nothing 
+                int profitWhenDidNothing = next[j][l];
+                
+                int profitWhenDidSomething = 0;
+                
+                // when you are not holding any stock and buying a stock 
+                if(j){
+                    profitWhenDidSomething -= prices[i];
+                    profitWhenDidSomething += next[0][l];
+                }
+                // when you are holding a stock  and selling that stock
+                else{
+                    // k--;
+                    profitWhenDidSomething += prices[i];
+                    profitWhenDidSomething += next[1][l-1];
+                    // k++;
+                }
+                
+                curr[j][l] = max(profitWhenDidNothing,profitWhenDidSomething);
+                
+            }
+        }
+        next = curr;
+    }
+
+    return curr[1][k];
+}
+
+int maxProfit(vector<int>& prices){
+    return solveOptimal(prices);
+}
