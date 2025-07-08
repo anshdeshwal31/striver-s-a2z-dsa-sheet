@@ -93,3 +93,44 @@ public:
 
 
 
+
+// LC - 921. Minimum Add to Make Parentheses Valid
+
+// O(n) space complexity 
+
+int minAddToMakeValid(string s) {
+    stack<char>st;
+    for(int i = 0 ; i < s.size(); i ++){
+        if(s[i]=='('){
+            st.push(s[i]);
+        }
+        else{
+            if(!st.empty() && st.top()=='(') st.pop();
+            else st.push(')');
+        }
+    }
+    return st.size();
+}
+
+// O(1) space complexity
+
+int minAddToMakeValid(string s) {
+    int open = 0;  // number of unmatched '('
+    int moves = 0; // number of insertions needed
+
+    for (char c : s) {
+        if (c == '(') {
+            open++;  // one more '(' to match later
+        } else { // c == ')'
+            if (open > 0) {
+                open--;  // matched with an earlier '('
+            } else {
+                moves++; // no '(' available, so need one '(' insertion
+            }
+        }
+    }
+
+    moves += open; // any remaining '(' need closing ')'
+
+    return moves;
+}
