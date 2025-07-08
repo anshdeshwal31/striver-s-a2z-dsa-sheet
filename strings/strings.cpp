@@ -134,3 +134,60 @@ int minAddToMakeValid(string s) {
 
     return moves;
 }
+
+
+
+
+// LC - 38. Count and Say
+
+// recursive solution 
+    string countAndSay(int n) {
+        if (n == 1) return "1";
+
+        string prev = countAndSay(n - 1);
+        string result = "";
+
+        int count = 1;
+        char currChar = prev[0];
+
+        for (int i = 1; i < prev.size(); ++i) {
+            if (prev[i] == currChar) {
+                count++;
+            } else {
+                result += to_string(count) + currChar;
+                currChar = prev[i];
+                count = 1;
+            }
+        }
+
+        result += to_string(count) + currChar;
+        return result;
+    }
+
+    // iterative solution 
+        string countAndSay(int n) {
+        if (n == 1) return "1";
+
+        string result = "1";
+
+        for (int i = 2; i <= n; ++i) {
+            string temp = "";
+            int count = 1;
+            char currChar = result[0];
+
+            for (int j = 1; j < result.size(); ++j) {
+                if (result[j] == currChar) {
+                    count++;
+                } else {
+                    temp += to_string(count) + currChar;
+                    currChar = result[j];
+                    count = 1;
+                }
+            }
+
+            temp += to_string(count) + currChar;
+            result = temp;
+        }
+
+        return result;
+    }
