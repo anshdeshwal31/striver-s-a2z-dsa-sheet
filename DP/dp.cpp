@@ -3190,3 +3190,51 @@ int solveOptimal(vector<int>& prices){
 int maxProfit(vector<int>& prices){
     return solveOptimal(prices);
 }
+
+
+
+
+// LC - 309. Best Time to Buy and Sell Stock with Cooldown
+
+// using recursion
+
+    int solve(int i, bool canBuy, vector<int>& prices) {
+    if (i >= prices.size()) return 0;
+
+    int profit = 0;
+
+    if (canBuy) {
+        // Either buy today or skip
+        int buy = -prices[i] + solve(i + 1, false, prices);
+        int skip = solve(i + 1, true, prices);
+        profit = max(buy, skip);
+    } else {
+        // Either sell today (with cooldown) or skip
+        int sell = prices[i] + solve(i + 2, true, prices);
+        int skip = solve(i + 1, false, prices);
+        profit = max(sell, skip);
+    }
+
+    return profit;
+}
+
+int maxProfit(vector<int>& prices) {
+    return solve(0, true, prices);
+}
+
+// using tabulation 
+
+int maxProfit(vector<int>& prices) {
+    int n = prices.size();
+    vector<vector<int>> dp(n + 2, vector<int>(2, 0));
+
+    for (int i = n - 1; i >= 0; --i) {
+        dp[i][1] = max(-prices[i] + dp[i+1][0],
+                       dp[i+1][1]);
+
+        dp[i][0] = max(prices[i] + dp[i+2][1],
+                       dp[i+1][0]);
+    }
+
+    return dp[0][1];
+}
