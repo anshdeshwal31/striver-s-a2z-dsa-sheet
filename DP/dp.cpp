@@ -2964,3 +2964,71 @@ int minDistance(string word1, string word2) {
 
         return dp[0][0];
     }
+
+
+    
+
+    // LC - 44. Wildcard Matching
+
+    // using recursion  
+
+    bool isMatch(string s, string p) {
+        return match(0, 0, s, p);
+    }
+
+    bool match(int i, int j, string &s, string &p) {
+        if (i == s.size() && j == p.size())
+            return true;
+
+        // Pattern ended but string still left
+        if (j == p.size())
+            return false;
+
+        // String ended but pattern still left
+        if (i == s.size()) {
+            for (int k = j; k < p.size(); ++k)
+                if (p[k] != '*') return false;
+            return true;
+        }
+
+        if (p[j] == s[i] || p[j] == '?')
+            return match(i+1, j+1, s, p);
+
+        if (p[j] == '*') {
+            return match(i, j+1, s, p) || match(i+1, j, s, p);
+        }
+
+        // Characters don't match and no wildcard
+        return false;
+    }
+
+     bool isMatch(string s, string p) {
+        int m = s.size(), n = p.size();
+        vector<vector<int>> dp(m+1, vector<int>(n+1, -1));
+        return match(0, 0, s, p, dp);
+    }
+
+
+     // using tabulation 
+        bool isMatch(string s, string p) {
+        int m = s.size(), n = p.size();
+        vector<vector<bool>> dp(m+1, vector<bool>(n+1, false));
+
+        dp[m][n] = true;
+
+        for (int j = n-1; j >= 0; --j)
+            dp[m][j] = (p[j] == '*') && dp[m][j+1];
+
+        for (int i = m-1; i >= 0; --i) {
+            for (int j = n-1; j >= 0; --j) {
+                if (p[j] == s[i] || p[j] == '?')
+                    dp[i][j] = dp[i+1][j+1];
+                else if (p[j] == '*')
+                    dp[i][j] = dp[i][j+1] || dp[i+1][j];
+                else
+                    dp[i][j] = false;
+            }
+        }
+
+        return dp[0][0];
+    }
