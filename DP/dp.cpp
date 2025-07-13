@@ -3406,3 +3406,82 @@ int longestIncreasingSubsequence(int arr[], int n) {
 
     return len;
 }
+
+
+
+// LC - 368. Largest Divisible Subset
+
+// using recursion 
+
+void solve(int currIndex, int lastNum, vector<int>& nums, vector<int>& current, vector<int>& best) {
+    if (currIndex == nums.size()) {
+        if (current.size() > best.size()) {
+            best = current;
+        }
+        return;
+    }
+
+    // Option 1: include if divisible
+    if (lastNum == -1 || nums[currIndex] % lastNum == 0) {
+        current.push_back(nums[currIndex]);
+        solve(currIndex+1, nums[currIndex], nums, current, best);
+        current.pop_back();
+    }
+
+    // Option 2: exclude
+    solve(currIndex+1, lastNum, nums, current, best);
+}
+
+vector<int> largestDivisibleSubset(vector<int>& nums) {
+    sort(nums.begin(), nums.end());  // sort for divisibility chain
+    vector<int> current, best;
+    solve(0, -1, nums, current, best);
+    return best;
+}
+
+
+// optimal solution 
+
+vector<int> largestDivisibleSubset(vector<int>& arr) {
+    int n = arr.size();
+
+    // Sort the array in ascending order
+    sort(arr.begin(), arr.end());
+
+    vector<int> dp(n, 1);   // dp[i] stores the length of the divisible subset ending at arr[i]
+    vector<int> hash(n, 0); // hash[i] stores the previous index in the divisible subset ending at arr[i]
+
+    for (int i = 0; i < n; i++) {
+        hash[i] = i; // Initialize with the current index
+        for (int prev_index = 0; prev_index < i; prev_index++) {
+            if (arr[i] % arr[prev_index] == 0 && 1 + dp[prev_index] > dp[i]) {
+                dp[i] = 1 + dp[prev_index];
+                hash[i] = prev_index;
+            }
+        }
+    }
+
+    int ans = -1;
+    int lastIndex = -1;
+
+    for (int i = 0; i < n; i++) {
+        if (dp[i] > ans) {
+            ans = dp[i];
+            lastIndex = i;
+        }
+    }
+
+    vector<int> temp;
+    temp.push_back(arr[lastIndex]);
+
+    // Reconstruct the divisible subset using the hash table
+    while (hash[lastIndex] != lastIndex) {
+        lastIndex = hash[lastIndex];
+        temp.push_back(arr[lastIndex]);
+    }
+
+    // Reverse the array to get the correct order
+    reverse(temp.begin(), temp.end());
+
+    return temp;
+}
