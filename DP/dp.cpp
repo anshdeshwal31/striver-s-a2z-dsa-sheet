@@ -3317,3 +3317,66 @@ int solve(vector<int>&nums){
 int lengthOfLIS(vector<int>& nums) {
     return solve(nums);
 }
+
+
+
+
+// Printing Longest Increasing Subsequence - https://www.naukri.com/code360/problems/printing-longest-increasing-subsequence_8360670
+
+// using recursion 
+
+void solve(int prevIndex, int currIndex, vector<int>& nums, vector<int>& current, vector<int>& best) {
+    if (currIndex == nums.size()) {
+        if (current.size() > best.size()) {
+            best = current;
+        }
+        return ;
+    }
+
+    solve(prevIndex, currIndex + 1, nums, current, best);
+    if (prevIndex == -1 || nums[currIndex] > nums[prevIndex]) {
+        current.push_back(nums[currIndex]);
+        solve(currIndex, currIndex + 1, nums, current, best);
+        current.pop_back();
+    }
+    return ;
+}
+
+vector<int> printingLongestIncreasingSubsequence(vector<int> nums, int n) {
+    vector<int> current, best;
+     solve(-1, 0, nums, current, best);
+     return best;
+}
+
+
+
+// optimal solution 
+
+vector<int> printingLongestIncreasingSubsequence(vector<int>& nums, int n) {
+    vector<int> dp(n, 1), hash(n);
+    int maxLen = 1, lastIndex = 0;
+
+    for (int i = 0; i < n; ++i) {
+        hash[i] = i;  // initially each element points to itself
+        for (int j = 0; j < i; ++j) {
+            if (nums[j] < nums[i] && dp[j]+1 > dp[i]) {
+                dp[i] = dp[j] + 1;
+                hash[i] = j;
+            }
+        }
+        if (dp[i] > maxLen) {
+            maxLen = dp[i];
+            lastIndex = i;
+        }
+    }
+
+    // Now reconstruct the sequence
+    vector<int> lis;
+    lis.push_back(nums[lastIndex]);
+    while (hash[lastIndex] != lastIndex) {
+        lastIndex = hash[lastIndex];
+        lis.push_back(nums[lastIndex]);
+    }
+    reverse(lis.begin(), lis.end());
+    return lis;
+}
