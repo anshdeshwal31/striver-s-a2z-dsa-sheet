@@ -3290,3 +3290,30 @@ int maxProfit(vector<int>& prices, int fee) {
 
     return dp[0][1];  // starting from day 0 with canBuy=true
 }
+
+
+
+// LC 300 - longest increasing subsequence
+
+int solve(vector<int>&nums){
+    int n = nums.size();
+    vector<vector<int>> dp(n+1,vector<int>(n+1,0));
+
+    for(int row = n-1; row>=-1; row--){
+        for(int col=n-1 ; col>=0; col--){
+            int exclude = dp[row+1][col+1];
+
+            int include = 0;
+            if (row == -1 || nums[col] > nums[row]) {
+                include = 1 + dp[col+1][col+1];
+            }
+            dp[row+1][col] =  max(include, exclude);
+
+        }
+    }
+    return dp[0][0];
+}
+
+int lengthOfLIS(vector<int>& nums) {
+    return solve(nums);
+}
