@@ -3485,3 +3485,96 @@ vector<int> largestDivisibleSubset(vector<int>& arr) {
 
     return temp;
 }
+
+
+
+// LC - 1048. Longest String Chain
+
+// using recursion 
+
+    // Helper function to check if a word exists in the list
+    bool exists(const string& word, const vector<string>& words) {
+        for (const string& w : words) {
+            if (w == word) return true;
+        }
+        return false;
+    }
+
+    int dfs(const string& word, const vector<string>& words) {
+        int maxLen = 1; // At least the word itself
+
+        for (int i = 0; i < word.size(); ++i) {
+            string prev = word.substr(0, i) + word.substr(i + 1);
+            if (exists(prev, words)) {
+                maxLen = max(maxLen, 1 + dfs(prev, words));
+            }
+        }
+
+        return maxLen;
+    }
+
+    int longestStrChain(vector<string>& words) {
+        int result = 1;
+        for (const string& word : words) {
+            result = max(result, dfs(word, words));
+        }
+        return result;
+    }
+
+
+    // using memoization 
+
+  int dfs(const string& word, unordered_map<string, int> memo, unordered_set<string> wordSet) {
+        if (memo.count(word)) return memo[word];
+
+        int maxLen = 1;
+        for (int i = 0; i < word.size(); ++i) {
+            string prev = word.substr(0, i) + word.substr(i + 1);
+            if (wordSet.count(prev)) {
+                maxLen = max(maxLen, 1 + dfs(prev,memo,wordSet));
+            }
+        }
+
+        return memo[word] = maxLen;
+    }
+
+    int longestStrChain(vector<string>& words) {
+            unordered_set<string> wordSet;
+    unordered_map<string, int> memo;
+        for (const string& w : words) {
+            wordSet.insert(w);
+        }
+
+        int result = 1;
+        for (const string& word : words) {
+            result = max(result, dfs(word,memo ,wordSet));
+        }
+
+        return result;
+    }
+
+
+    // using tabulation 
+
+    int longestStrChain(vector<string>& words) {
+        sort(words.begin(), words.end(), [](const string& a, const string& b) {
+            return a.length() < b.length();
+        });
+
+        unordered_map<string, int> dp;
+        int maxLen = 1;
+
+        for (const string& word : words) {
+            int best = 1;
+            for (int i = 0; i < word.length(); ++i) {
+                string prev = word.substr(0, i) + word.substr(i + 1);
+                if (dp.count(prev)) {
+                    best = max(best, dp[prev] + 1);
+                }
+            }
+            dp[word] = best;
+            maxLen = max(maxLen, best);
+        }
+
+        return maxLen;
+    }
