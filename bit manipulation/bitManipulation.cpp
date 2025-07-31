@@ -55,3 +55,17 @@ bool isPowerOfTwo(int n) {
         }
         
     }
+
+
+    // set the rightmost unset bit - https://www.geeksforgeeks.org/problems/set-the-rightmost-unset-bit4436/1
+
+    int setBit(int n) {
+        int k = 1;
+        while (1) {
+            if ((k & n) == 0) {
+                n = n | k;
+                return n;
+            }
+            k = k << 1; // Left shift to move to next bit
+        }
+    }
