@@ -11,3 +11,12 @@ bool checkKthBit(int n, int k) {
     if(n&temp) return true;
     else return false;
 }
+
+
+
+// check odd or even - https://www.geeksforgeeks.org/problems/odd-or-even3618/1
+
+bool isEven(int n) {
+    if(n&1) return false;
+    else return true;
+}
