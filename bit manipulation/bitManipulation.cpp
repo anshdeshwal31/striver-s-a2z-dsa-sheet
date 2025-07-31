@@ -29,3 +29,29 @@ bool isPowerOfTwo(int n) {
         if (n <= 0) return false;
         return (n & (n - 1)) == 0;
 }
+
+
+// Number of 1 bits - https://www.geeksforgeeks.org/problems/set-bits0143/1
+
+    int setBits(int n) {
+        int count = 0;
+        while (n > 0) {
+            if (n & 1) count++;  // Check if the LSB is set
+            n = n >> 1;          // Shift right to check the next bit
+        }
+        return count;
+    }
+
+
+        
+    int setBit(int n) {
+        // Write Your Code here
+
+        if(n&1){
+            n = n>>1;
+        }
+        else{
+            n = n|1;
+        }
+        
+    }
