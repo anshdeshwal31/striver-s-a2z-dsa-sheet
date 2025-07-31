@@ -1,0 +1,13 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+// check k-th bit - https://www.geeksforgeeks.org/problems/check-whether-k-th-bit-is-set-or-not-1587115620/1
+
+bool checkKthBit(int n, int k) {
+    int temp = 1;
+    temp<<k;
+
+    if(n&temp) return true;
+    else return false;
+}
