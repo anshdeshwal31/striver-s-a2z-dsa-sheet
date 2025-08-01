@@ -122,7 +122,7 @@ bool isPowerOfTwo(int n) {
     }
 
 
-    
+
     // 2220. Minimum Bit Flips to Convert Number
     int minBitFlips(int start, int goal) {
         int xored = start ^ goal;
@@ -132,4 +132,16 @@ bool isPowerOfTwo(int n) {
             xored >>= 1;
         }
         return count;
+    }
+
+
+
+    // LC - 136. Single Number
+
+    int singleNumber(vector<int>& nums) {
+        int result = 0;
+        for(int i = 0 ; i < nums.size();i++){
+            result^=nums[i];
+        }
+        return result ;
     }
