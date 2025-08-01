@@ -167,3 +167,18 @@ bool isPowerOfTwo(int n) {
 
         return result;
     }
+
+
+
+    // find XOR of numbers from L to R -  https://www.geeksforgeeks.org/problems/find-xor-of-numbers-from-l-to-r/1
+    
+    int xorTill(int n) {
+        if (n % 4 == 0) return n;
+        else if (n % 4 == 1) return 1;
+        else if (n % 4 == 2) return n + 1;
+        else return 0;
+    }
+
+    int findXOR(int l, int r) {
+        return xorTill(r) ^ xorTill(l - 1);
+    }
