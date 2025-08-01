@@ -182,3 +182,33 @@ bool isPowerOfTwo(int n) {
     int findXOR(int l, int r) {
         return xorTill(r) ^ xorTill(l - 1);
     }
+
+
+
+    // LC - 260. Single Number III
+    
+    vector<int> singleNumber(vector<int>& nums) {
+        int xorAll = 0;
+        
+        // Step 1: XOR of all elements gives a ^ b
+        for (int n : nums) {
+            xorAll ^= n;
+        }
+
+        // Step 2: Find a set bit in xorAll (rightmost set bit)
+        int diff_bit = 1;
+        while ((xorAll & diff_bit) == 0) {
+            diff_bit <<= 1;
+        }
+
+        // Step 3: Divide elements into two groups based on that bit
+        int a = 0, b = 0;
+        for (int n : nums) {
+            if (n & diff_bit)
+                a ^= n;
+            else
+                b ^= n;
+        }
+
+        return {a, b};
+    }
