@@ -234,4 +234,35 @@ bool isPowerOfTwo(int n) {
         }
 
         return res;
+    }/
+
+
+
+    // print all divisors of a number
+
+    void print_divisors(int n) {
+        vector<int> smallDivisors;
+        vector<int> largeDivisors;
+
+        for (int i = 1; i * i <= n; ++i) {
+            if (n % i == 0) {
+                smallDivisors.push_back(i);
+                if (i != n / i) {
+                    largeDivisors.push_back(n / i);
+                }
+            }
+        }
+
+        // Print smaller divisors (in ascending order)
+        for (int d : smallDivisors) {
+            cout << d << " ";
+        }
+
+        // Print larger divisors (in reverse order for ascending output)
+        reverse(largeDivisors.begin(), largeDivisors.end());
+        for (int d : largeDivisors) {
+            cout << d << " ";
+        }
+
+        // cout << endl;
     }
