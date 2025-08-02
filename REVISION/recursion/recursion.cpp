@@ -538,3 +538,88 @@ bool solve(int start , int end  , string s , vector<string>& wordDict){
     }
     return false;
 }
+
+
+void solve(int i , vector<string>&ans , string temp , int value , string num , int target){
+    if(i==num.size()){
+        if(value==target){
+            temp.pop_back();
+            ans.push_back(temp);
+            return ;
+        }
+        return;
+    }
+    
+    solve(i+1,ans , temp+num[i]+'+',value+(num[i] - '0') ,num , target );
+    solve(i+1,ans , temp+num[i]+'-',value-(num[i] - '0') ,num , target );
+
+    if(i==0 ){
+        solve(i+1,ans , temp+num[i]+'*',1*(num[i] - '0') ,num , target );
+    }
+    else{
+        solve(i+1,ans , temp+num[i]+'*',value*(num[i] - '0') ,num , target );
+    }
+        
+}
+
+vector<string> addOperators(string num, int target) {
+    vector<string>ans;
+    solve(0,ans,"",0,num,target);
+    return ans;
+}
+
+
+
+void dfs(string num, int target, int pos, long curr_val, long prev_operand, string expr, vector<string>& res) {
+    if (pos == num.size()) {
+        if (curr_val == target) res.push_back(expr);
+        return;
+    }
+
+    for (int i = pos; i < num.size(); ++i) {
+        if (i != pos && num[pos] == '0') break; // skip leading 0s
+
+        string part = num.substr(pos, i - pos + 1);
+        long curr = stol(part);
+
+        if (pos == 0) {
+            dfs(num, target, i + 1, curr, curr, part, res);
+        } else {
+            dfs(num, target, i + 1, curr_val + curr, curr, expr + "+" + part, res);
+            dfs(num, target, i + 1, curr_val - curr, -curr, expr + "-" + part, res);
+            dfs(num, target, i + 1, curr_val - prev_operand + prev_operand * curr, prev_operand * curr, expr + "*" + part, res);
+        }
+    }
+}
+
+
+vector<string> addOperators(string num, int target) {
+    vector<string> res;
+    dfs(num, target, 0, 0, 0, "", res);
+    return res;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

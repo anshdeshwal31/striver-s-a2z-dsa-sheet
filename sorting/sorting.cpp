@@ -76,30 +76,46 @@ void mergeSort(vector<int>& arr,int n ) {
 
 
 // quick sort
-int partition(vector<int>& arr, int low, int high) {
-    int pivot = arr[high];  
-    int i = low - 1;
+int partition(vector<int> &arr, int start, int end) {
+    int pivot = arr[start];
+    int lessCount = 0;
 
-    for (int j = low; j <= high - 1; j++) {
-        if (arr[j] < pivot) {
-            i++; 
-            swap(arr[i], arr[j]); 
+    for(int i=start+1; i<=end; i++) {
+        if(arr[i] <= pivot) {
+            lessCount++;
         }
     }
-    swap(arr[i + 1], arr[high]);  
-    return i + 1; 
+
+    int pivotIndex = start + lessCount;
+    swap(arr[start], arr[pivotIndex]);
+
+    int i = start;
+    int j = end;
+
+    while(i<pivotIndex && j>pivotIndex) {
+        while(arr[i] <= pivot) {
+            i++;
+        }
+
+        while(arr[j] > pivot) {
+            j--;
+        }
+
+        if(i<pivotIndex && j>pivotIndex) {
+            swap(arr[i++], arr[j--]);
+        }
+    } 
+
+    return pivotIndex;
 }
 
-
-void solve(vector<int>& arr, int low, int high) {
-    if (low < high) {
-        int pi = partition(arr, low, high);  
-        solve(arr, low, pi - 1);  
-        solve(arr, pi + 1, high); 
+void quickSort(vector<int> &arr, int start, int end) {
+    if(start >= end) {
+        return;
     }
-}
-vector<int> quickSort(vector<int> arr){
-    int n = arr.size();
-    solve(arr, 0, n - 1);
-    return arr;
+
+    int p = partition(arr, start, end);
+
+    quickSort(arr, start, p-1);
+    quickSort(arr, p+1, end);
 }

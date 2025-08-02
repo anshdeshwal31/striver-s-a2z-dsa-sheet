@@ -464,3 +464,37 @@ public:
         return result;
     }
 };
+
+
+
+// LC - 347. Top K Frequent Elements
+
+vector<int> topKFrequent(vector<int>& nums, int k) {
+    unordered_map<int, int> freq;
+
+    // Count frequencies
+    for (int num : nums) {
+        freq[num]++;
+    }
+
+    // Min-Heap: pair<frequency, number>
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> minHeap;
+
+    // Maintain heap of size k
+    for (auto& entry : freq) {
+        minHeap.push({entry.second, entry.first});
+        if (minHeap.size() > k) {
+            minHeap.pop();  // Remove least frequent
+        }
+    }
+
+    // Extract k most frequent elements
+    vector<int> result;
+    while (!minHeap.empty()) {
+        result.push_back(minHeap.top().second);
+        minHeap.pop();
+    }
+
+    return result;
+}
+

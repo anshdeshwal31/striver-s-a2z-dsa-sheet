@@ -187,7 +187,7 @@ bool isPowerOfTwo(int n) {
 
     // LC - 260. Single Number III
     
-    vector<int> singleNumber(vector<int>& nums) {
+    vector<int> singleNumber3(vector<int>& nums) {
         int xorAll = 0;
         
         // Step 1: XOR of all elements gives a ^ b
@@ -211,4 +211,27 @@ bool isPowerOfTwo(int n) {
         }
 
         return {a, b};
+    }
+
+
+
+    // print all prime factors of a number 
+
+    vector<int> primeFac(int n) {
+        vector<int> res;
+
+        for (int i = 2; i * i <= n; ++i) {
+            if (n % i == 0) {
+                res.push_back(i);  // Unique prime factor found
+                while (n % i == 0) {
+                    n /= i;  // Remove all multiples of i from n
+                }
+            }
+        }
+
+        if (n > 1) {
+            res.push_back(n);  // Remaining n is a prime factor
+        }
+
+        return res;
     }

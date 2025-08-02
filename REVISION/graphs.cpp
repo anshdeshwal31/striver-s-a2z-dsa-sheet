@@ -62,66 +62,66 @@ int orangesRotting(vector<vector<int>>& grid) {
 
 
 // LC 542 - 01 matrix
-    // // brute force  
-    // int solve(int row, int col, vector<vector<int>>& mat) {
-    //     // using bfs traversal
-    //     vector<vector<int>> dir = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // up, right, down, left
-    //     queue<pair<int, int>> q;
-    //     q.push({row, col});
+    // brute force  
+    int solve(int row, int col, vector<vector<int>>& mat) {
+        // using bfs traversal
+        vector<vector<int>> dir = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // up, right, down, left
+        queue<pair<int, int>> q;
+        q.push({row, col});
 
-    //     // Change: Added a visited matrix to avoid revisiting
-    //     vector<vector<bool>> visited(mat.size(), vector<bool>(mat[0].size(), false));
-    //     visited[row][col] = true;
+        // Change: Added a visited matrix to avoid revisiting
+        vector<vector<bool>> visited(mat.size(), vector<bool>(mat[0].size(), false));
+        visited[row][col] = true;
 
-    //     int k = 0;
-    //     while (!q.empty()) {
-    //         int size = q.size();
+        int k = 0;
+        while (!q.empty()) {
+            int size = q.size();
 
-    //         for (int i = 0; i < size; i++) {
-    //             auto top = q.front();
-    //             q.pop();
-    //             int x = top.first;
-    //             int y = top.second;
+            for (int i = 0; i < size; i++) {
+                auto top = q.front();
+                q.pop();
+                int x = top.first;
+                int y = top.second;
 
-    //             // Check if current cell is 0
-    //             if (mat[x][y] == 0) {
-    //                 return k;  // return distance if zero is found
-    //             }
+                // Check if current cell is 0
+                if (mat[x][y] == 0) {
+                    return k;  // return distance if zero is found
+                }
 
-    //             // Traverse in four directions
-    //             for (auto d : dir) {
-    //                 int newX = x + d[0];
-    //                 int newY = y + d[1];
+                // Traverse in four directions
+                for (auto d : dir) {
+                    int newX = x + d[0];
+                    int newY = y + d[1];
                     
-    //                 // Change: Added condition to avoid revisiting cells
-    //                 if (newX >= 0 && newX < mat.size() && newY >= 0 && newY < mat[0].size() && !visited[newX][newY]) {
-    //                     q.push({newX, newY});
-    //                     visited[newX][newY] = true;
-    //                 }
-    //             }
-    //         }
-    //         k++;  // Increase distance after checking one level of BFS
-    //     }
+                    // Change: Added condition to avoid revisiting cells
+                    if (newX >= 0 && newX < mat.size() && newY >= 0 && newY < mat[0].size() && !visited[newX][newY]) {
+                        q.push({newX, newY});
+                        visited[newX][newY] = true;
+                    }
+                }
+            }
+            k++;  // Increase distance after checking one level of BFS
+        }
 
-    //     return -1;
-    // }
+        return -1;
+    }
 
-    // vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
-    //     int n = mat.size();
-    //     int m = mat[0].size();
-    //     vector<vector<int>> res(n, vector<int>(m, 0));
+    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+        int n = mat.size();
+        int m = mat[0].size();
+        vector<vector<int>> res(n, vector<int>(m, 0));
 
-    //     for (int i = 0; i < n; i++) {
-    //         for (int j = 0; j < m; j++) {
-    //             if (mat[i][j] != 0) {
-    //                 // Change: Initialize distance as large value instead of 0
-    //                 res[i][j] = solve(i, j, mat);
-    //             }
-    //         }
-    //     }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (mat[i][j] != 0) {
+                    // Change: Initialize distance as large value instead of 0
+                    res[i][j] = solve(i, j, mat);
+                }
+            }
+        }
 
-    //     return res;
-    // }
+        return res;
+    }
 
 
     // optimised solution 
