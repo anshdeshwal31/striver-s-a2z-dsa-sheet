@@ -287,3 +287,39 @@ int countPrimes(int n) {
     
     return count(isPrime.begin(), isPrime.end(), true);
 }
+
+
+
+// prime factorization of a number - https://takeuforward.org/plus/dsa/problems/prime-factorisation-of-a-number
+
+vector<int> getPrimeFactors(int num, vector<int>& spf) {
+    vector<int> factors;
+    while (num > 1) {
+        factors.push_back(spf[num]);
+        num /= spf[num];
+    }
+    return factors;
+}
+
+vector<vector<int>> primeFactorization(vector<int>& queries) {
+    int maxVal = *max_element(queries.begin(), queries.end());
+    
+    // Step 1: Precompute smallest prime factors (spf)
+    vector<int> spf(maxVal + 1);
+    for (int i = 0; i <= maxVal; i++) spf[i] = i;
+    
+    for (int i = 2; i * i <= maxVal; i++) {
+        if (spf[i] == i) { // i is prime
+            for (int j = i * i; j <= maxVal; j += i) {
+                if (spf[j] == j) spf[j] = i;
+            }
+        }
+    }
+    
+    // Step 2: Get factors for each query
+    vector<vector<int>> result;
+    for (int q : queries) {
+        result.push_back(getPrimeFactors(q, spf));
+    }
+    return result;
+}
